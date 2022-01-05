@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <script type='module' src="assets/js/auth_signup.js"></script>
+</head>
+
+<body>
+    <div class="top">
+        <h2 class="head">CP Dashboard Login</h2>
+    </div>
+    <h2><%= message_login %> </h2>
+    <div class="content">
+        <form>
+
+            <div class="form-head">
+                <h2 class="login">LOGIN</h2>
+            </div>
+            <br>
+            <div class="container">
+                <div class="input-group">
+                    <input id="cf_handle" type="text" name="cf_handle"/>
+                    <div id="user-text">CF-Handle</div>
+                </div>
+                <br>
+                <div class="input-group">
+                    <input id="cf_email" type="email" name="cf_email"/>
+                    <div id="user-text">CF Email</div>
+                </div>
+                <br>
+                <div class="input-group">
+                    <input id="inst_email" type="email" name="inst_email">
+                    <div id="user-text">Inst Email</div>
+                </div>
+                <br>
+                <div class="input-group">
+                    <input id="pw" type="password" name="password"/>
+                    <div id="pwd-text">Password</div>
+                </div>
+                <br>
+                
+                <input type="button" id="signup" value="Sign Up">
+
+                
+            </div>
+
+        </form>
+    </div>
+</body>
+
+</html>
