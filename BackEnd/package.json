@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "ejs": "^3.1.6",
+    "express": "^4.17.2",
+    "express-session": "^1.17.2",
+    "firebase": "^9.6.1",
+    "mongodb": "^4.3.0",
+    "mongoose": "^6.1.6",
+    "node-fetch": "^3.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
