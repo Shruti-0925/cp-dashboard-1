@@ -22,7 +22,7 @@ async function registerUser() {
   if (result.status === 'ok') {
       alert('Success')
   } else {
-      alert(result.status)
+      alert(result.error)
   }
 }
 async function Login() {   
@@ -43,7 +43,7 @@ async function Login() {
   if (result.status === 'ok') {
       alert('Success')
   } else {
-      alert(result.status)
+      alert(result.error)
   }
 }
 function SignUp(task) {  
@@ -55,7 +55,6 @@ function SignUp(task) {
     const cf_email = document.getElementById("cf_email").value
     const inst_email = document.getElementById("inst_email").value
     const password2 = document.getElementById("pw-2").value
-    console.log(cf_handle);
     const url="https://codeforces.com/api/user.info?handles="+cf_handle;
     var getJSON = function(url, callback) {
         var xhr = new XMLHttpRequest();
