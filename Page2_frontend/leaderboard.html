@@ -1,0 +1,116 @@
+<html>
+<!-- <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head> -->
+<style>
+    body{
+        background: linear-gradient(to left, #8942a8, #ba382f);
+    }
+    table{
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        border-spacing: 0;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        z-index: 2;
+        transform: translate(-50%,-50%);
+        width: 60%;
+        height: 400px;
+        background: #fafafa;
+        text-align: center;
+        border-radius: 12px 12px 0 0;
+        box-shadow: 0 12px 5px rgba(32, 32, 32 ,0.3);
+    }
+ td,th{
+     border: 1px solid rgba(23, 204, 204, 0.329);
+     padding: 10px 15px;
+ }
+ th{
+     font-weight: bold;
+     text-transform: uppercase;
+ }
+
+ tr:nth-child(even){
+     background-color: #dddddd;
+ }
+
+ tr:hover{
+     background-color: black;
+     /* background: linear-gradient(to bottom right, red, yellow); */
+
+     color: white;
+ }
+
+ 
+</style>
+
+<script>
+      let sortDirection = false;
+      let tableData =[
+          {name : 'Dylan', 'questions':41, 'contests': 48 , 'rating' : 1000},
+          {name : 'pam', 'questions':321, 'contests': 28 , 'rating' : 1300},
+          {name : 'ryan', 'questions':311, 'contests': 18 , 'rating' : 300},
+          {name : 'michael', 'questions':31, 'contests': 50 , 'rating' : 1600},
+          {name : 'jim', 'questions':310, 'contests': 23 , 'rating' : 1400},
+          {name : 'dwight', 'questions':320, 'contests': 22 , 'rating' : 1900},
+          {name : 'stanley', 'questions':340, 'contests': 21 , 'rating' : 1300}
+          ];
+
+          window.onload = () => {
+              loadTableData(tableData);
+          };
+
+          function loadTableData(tableData){
+                   const tableBody = document.getElementById('tableData');
+                   let dataHtml = '';
+
+                   for(let data of tableData){
+                       dataHtml+=`<tr><td>${data.name}</td><td>${data.questions}</td><td>${data.contests}</td><td>${data.rating}</td></tr>`;
+                   }
+                   console.log(dataHtml);
+                   tableBody.innerHTML = dataHtml;
+          }
+          function sortColumn(columnName){
+              const datatype = typeof tableData[0][columnName];
+
+              sortDirection = !sortDirection;
+
+              switch(datatype){
+                  case 'number':
+                      sortNumberColumn(sortDirection,columnName);
+                      break;
+              }
+            loadTableData(tableData);
+          }
+
+          function sortNumberColumn(sort, columnName){
+            tableData = tableData.sort((p1,p2) => {
+                 return sort ? p1[columnName] - p2[columnName] : p2[columnName] - p1[columnName]
+             });
+              
+          }
+          
+</script>
+<body>
+    <div>
+        
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th onclick="sortColumn('questions')">Questions solved</th>
+                <th onclick="sortColumn('contests')">Contest given</th>
+                <th onclick="sortColumn('rating')">Rating</th>
+                
+            </tr>
+        </thead>
+        <tbody id="tableData"></tbody>
+    </table>
+    </div>
+</body>
+</html>
