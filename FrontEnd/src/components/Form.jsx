@@ -164,6 +164,7 @@ function Form(props) {
         <input id="pw-2" type="password" name="password"/>
       </div>)}
         
+      <a href="leaderboard.html">
       <input 
         className="auth"
         type="button" 
@@ -175,6 +176,7 @@ function Form(props) {
         onMouseOver={hob}
       >
       </input>
+      </a>
         
     </div>
   );
