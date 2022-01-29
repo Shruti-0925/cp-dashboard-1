@@ -1,21 +1,24 @@
+// Importing Modules
 var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
 const path=require("path");
-var MongoClient = require('mongodb').MongoClient;
+const bcrypt = require('bcrypt');
+const mongoose = require("mongoose");
+const axios = require('axios');
+
+// Connecting with database
+const url="mongodb+srv://cp-user:12345@cluster.ye5s9.mongodb.net/CP-Dashboard?retryWrites=true&w=majority"
+mongoose.connect(String(url),{ useNewUrlParser: true , useUnifiedTopology: true});
+
+// Cofiguring app
 app.set("views", __dirname + "/views");
 app.set("view engine", "ejs");
 const publicdirectory = path.join(__dirname,'./public')
 app.use(express.static(publicdirectory));
-const url="mongodb+srv://cp-user:12345@cluster.ye5s9.mongodb.net/CP-Dashboard?retryWrites=true&w=majority"
-const bcrypt = require('bcrypt');
-const { error } = require("console");
-const mongoose = require("mongoose");
-const axios = require('axios');
-const rp = require('request-promise')
-mongoose.connect(String(url),{ useNewUrlParser: true , useUnifiedTopology: true});
 app.use(bodyParser.json());
 
+// Defining Schema
 const userSchema = new mongoose.Schema(
 	{
 		cf_handle : {type : String, required:true, unique: true},
@@ -30,7 +33,9 @@ const userSchema = new mongoose.Schema(
 );
 const User = mongoose.model('UserSchema', userSchema);
 
+// Main Work
 
+// Function for getting details of a user while registering
 async function make_api_call(cf_handle) {
 	const cf_api="https://codeforces.com/api/";
 	const req1= await axios.get(cf_api + "user.status?handle=" + cf_handle); 
@@ -58,10 +63,6 @@ async function make_api_call(cf_handle) {
 				number_of_solved_questions = [...new Set(all_attempted_questions)].length;
 				number_of_contests = responseTwo.data.result.length;
 				max_rating = responesThree.data.result[0].maxRating;
-				// console.log(cf_handle);
-				// console.log("Number of Solved Questions : "+ number_of_solved_questions);
-				// console.log("Number of contests : " + responseTwo.data.result.length);
-				// console.log("Max Rating : " + responesThree.data.result[0].maxRating);
 			}))
 		}
 		catch(err){
@@ -72,20 +73,20 @@ async function make_api_call(cf_handle) {
 	return {num_of_questions : number_of_solved_questions , num_of_contests : number_of_contests , max_rating : max_rating};
 }
 
-app.get("/login", async (req, res) => {
-	const cursor = User.find().cursor();
-	
-	for (let user = await cursor.next(); user != null; user = await cursor.next())
-	{
-		let result;
-		await make_api_call(user.cf_handle).then((response) => {
-			// console.log(response);
-			result=response;
-		});
-		console.log(result);
-	}
-    res.render("login");
-});
+// Useless but helpful
+// app.get("/login", async (req, res) => {
+// 	const cursor = User.find().cursor();
+
+// 	for (let user = await cursor.next(); user != null; user = await cursor.next())
+// 	{
+// 		let result;
+// 		await make_api_call(user.cf_handle).then((response) => {
+// 			result=response;
+// 		});
+// 		console.log("IN route /login",result);
+// 	}
+//     res.render("login");
+// });
 
 app.post('/api/login', async (req, res) => {
 	const { cf_handle, password } = req.body;
@@ -168,6 +169,7 @@ app.get("/leaderboard", async (req, res) => {
 });
 
 
+// Hosting it
 var port = process.env.PORT || 5000;
 app.listen(port, function () {
     console.log("Server started at: http://localhost:" + String(port) + "/");
