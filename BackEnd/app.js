@@ -97,7 +97,7 @@ app.post('/api/login', async (req, res) => {
 	try {
 		if (await bcrypt.compare(password, user.password)) {
 
-			return res.json({ status: 'ok' })
+			return res.json({ status: 'ok', token : '123' })
 		}
 	} catch (error) {
 		return res.json({ status: 'error', error: error })
@@ -152,7 +152,7 @@ app.post('/api/register', async (req, res) => {
 			num_of_questions
 		})
 		console.log('User created successfully: ', response)
-		return res.json({ status : 'ok' });
+		return res.json({ status : 'ok', token : '123' });
 	} catch (error) {
 		if (error.code === 11000) {
 			// duplicate key
@@ -165,7 +165,7 @@ app.post('/api/register', async (req, res) => {
 
 app.get("/leaderboard", async (req, res) => {
 	const data = await User.find({}).lean();
-	res.render("leaderboard",{data : data});
+	res.send(data);
 });
 
 

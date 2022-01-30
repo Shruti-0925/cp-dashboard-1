@@ -1,19 +1,21 @@
 import React from "react";
-import Form from "./Form";
+import Login from "./Login";
+import Register from "./Register";
 import LeaderBoard from "./LeaderBoard";
-import { BrowserRouter as Router, Routes , Route } from "react-router-dom";
+import { Routes , Route } from "react-router-dom";
+
+import PrivateRoute from "./privateRoute.js";
 
 function App() {
   return (
     <div className="container">
-      <Router>
-          <Routes>
-            <Route exact path="/login" element={<Form isRegistered={true} />}/>
-            <Route exact path="/register" element={<Form isRegistered={false} />}/>
-            <Route exact path="/leaderboard" element={<LeaderBoard />}/>
-
-          </Routes>
-      </Router>
+      <Routes>
+        <Route exact path='/' element={<PrivateRoute />}>
+          <Route exact path='/' element={<LeaderBoard />}/>
+        </Route>
+        <Route exact path="/login" element={<Login />}/>
+        <Route exact path="/register" element={<Register />}/>
+      </Routes>
     </div>
   );
 }
