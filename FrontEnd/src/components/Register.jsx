@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-
+import { Helmet } from "react-helmet";
 function Register() {
     const [cf_handle, setCFHandle] = useState("");
     const [cf_email, setCFEmail] = useState("");
@@ -95,7 +95,9 @@ function Register() {
 
     return (
         <div>
-
+             <Helmet>
+        <link rel="stylesheet" href="login.css" />
+      </Helmet>
             <h1> Welcome</h1>
             <img
                 className="circle-img"
