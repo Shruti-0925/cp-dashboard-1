@@ -42,6 +42,7 @@ function Login() {
 
     return (
         <div>
+      
         <Helmet>
         <link rel="stylesheet" href="login.css" />
       </Helmet>
@@ -86,6 +87,14 @@ function Login() {
                     Don't have account? <Link to="/register">Register</Link>
                 </span>
             </form>
+            <ul class="box-area">
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
         </div>
     );
 }

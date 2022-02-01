@@ -169,6 +169,14 @@ function Register() {
                 <br/>
                 <span>Already have an account? <Link to="/login">Login</Link> </span>
             </form>
+            <ul class="box-area">
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
         </div>
     );
 }
