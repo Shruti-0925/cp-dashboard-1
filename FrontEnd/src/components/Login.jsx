@@ -24,9 +24,9 @@ function Login() {
         if (result.status === "ok") {
             console.log(result)
             var token = result.token;
-            localStorage.setItem("authToken", token);
+            sessionStorage.setItem("authToken", token);
             console.log(history);
-            history.pushState({urlPath:'/login'}, '',"/");
+            history.pushState({ urlPath: '/login' }, '', "/");
             window.location.reload();
         } else {
             alert(result.error);
@@ -42,10 +42,10 @@ function Login() {
 
     return (
         <div>
-      
-        <Helmet>
-        <link rel="stylesheet" href="login.css" />
-      </Helmet>
+
+            <Helmet>
+                <link rel="stylesheet" href="login.css" />
+            </Helmet>
             <h1> Welcome</h1>
             <img
                 className="circle-img"
@@ -80,21 +80,21 @@ function Login() {
                     type="submit"
                     id="login"
                 >
-                Login
+                    Login
                 </button>
-                <br/>
+                <br />
                 <span>
                     Don't have account? <Link to="/register">Register</Link>
                 </span>
             </form>
             <ul class="box-area">
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-    </ul>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
         </div>
     );
 }

@@ -9,7 +9,7 @@ function Register() {
     const [password, setPassword] = useState("");
     const [confirmpassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
-    
+
     const registerHandler = async (e) => {
         e.preventDefault();
         const url = "https://codeforces.com/api/user.info?handles=" + cf_handle;
@@ -65,19 +65,17 @@ function Register() {
                         config
                     );
                     console.log(fetched_data.data);
-                    if (fetched_data === undefined)
-                    {
+                    if (fetched_data === undefined) {
                         console.log("Nope");
                     }
                     else if (fetched_data.data.status === 'error') {
                         return setError(fetched_data.data.error);
                     }
-                    else 
-                    {
+                    else {
                         var token = fetched_data.data.token;
-                        localStorage.setItem("authToken", token);
+                        sessionStorage.setItem("authToken", token);
                         console.log(history);
-                        history.pushState({urlPath:'/register'}, '',"/");
+                        history.pushState({ urlPath: '/register' }, '', "/");
                         window.location.reload();
                     }
                 }
@@ -95,9 +93,9 @@ function Register() {
 
     return (
         <div>
-             <Helmet>
-        <link rel="stylesheet" href="login.css" />
-      </Helmet>
+            <Helmet>
+                <link rel="stylesheet" href="login.css" />
+            </Helmet>
             <h1> Welcome</h1>
             <img
                 className="circle-img"
@@ -164,19 +162,19 @@ function Register() {
                     type="submit"
                     id="signup"
                 >
-                Register
+                    Register
                 </button>
-                <br/>
+                <br />
                 <span>Already have an account? <Link to="/login">Login</Link> </span>
             </form>
             <ul class="box-area">
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-    </ul>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
         </div>
     );
 }
