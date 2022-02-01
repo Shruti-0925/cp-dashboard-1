@@ -28,6 +28,7 @@ const userSchema = new mongoose.Schema(
 		contests : {type : String,required : true},
 		max_rating : {type : String,required : true},
 		num_of_questions : {type : String,required : true},
+		batch : {type : String, required : true},
 	},
 	{ collection: 'Password-Details'}
 );
@@ -141,6 +142,7 @@ app.post('/api/register', async (req, res) => {
 	let num_of_questions = result.num_of_questions;
 	let max_rating = result.max_rating;
 	let contests = result.num_of_contests;
+	let batch = "20"+inst_email.slice(1,3);
 	try {
 		const response = await User.create({
 			cf_handle,
@@ -149,7 +151,8 @@ app.post('/api/register', async (req, res) => {
 			password,
 			contests,
 			max_rating,
-			num_of_questions
+			num_of_questions,
+			batch
 		})
 		console.log('User created successfully: ', response)
 		return res.json({ status : 'ok', token : '123' });

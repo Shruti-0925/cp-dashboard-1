@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { Helmet } from "react-helmet";
+
 function Register() {
     const [cf_handle, setCFHandle] = useState("");
     const [cf_email, setCFEmail] = useState("");
@@ -26,6 +27,15 @@ function Register() {
                 setError("");
             }, 5000);
             return setError("Passwords do not match");
+        }
+        console.log("20"+inst_email.slice(1,3));
+        if (inst_email.slice(7)!="students.iitmandi.ac.in") {
+            setPassword("");
+            setConfirmPassword("");
+            setTimeout(() => {
+                setError("");
+            }, 5000);
+            return setError("Enter correct educational id");
         }
         var getJSON = function (url, callback) {
             var xhr = new XMLHttpRequest();
@@ -65,10 +75,7 @@ function Register() {
                         config
                     );
                     console.log(fetched_data.data);
-                    if (fetched_data === undefined) {
-                        console.log("Nope");
-                    }
-                    else if (fetched_data.data.status === 'error') {
+                    if (fetched_data.data.status === 'error') {
                         return setError(fetched_data.data.error);
                     }
                     else {
