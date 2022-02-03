@@ -7,6 +7,8 @@ const bcrypt = require('bcrypt');
 const mongoose = require("mongoose");
 const axios = require('axios');
 const nodemailer = require("nodemailer");
+const { Timestamp } = require("mongodb");
+
 // Connecting with database
 const url="mongodb+srv://cp-user:12345@cluster.ye5s9.mongodb.net/CP-Dashboard?retryWrites=true&w=majority"
 mongoose.connect(String(url),{ useNewUrlParser: true , useUnifiedTopology: true});
@@ -32,7 +34,16 @@ const userSchema = new mongoose.Schema(
 	},
 	{ collection: 'Password-Details'}
 );
+const contestSchema = new mongoose.Schema(
+	{
+		contest_id : {type : Number, required:true, unique: true},
+		contest_name : {type : String, required:true, unique:true},
+		start_time : {type : String}
+	},
+	{ collection: 'All-Contests'}
+);
 const User = mongoose.model('UserSchema', userSchema);
+const Contests = mongoose.model('ContestSchema', contestSchema);
 
 // Main Work
 
@@ -206,6 +217,60 @@ const otpEmail = nodemailer.createTransport({
 app.get("/leaderboard", async (req, res) => {
 	const data = await User.find({}).lean();
 	res.send(data);
+});
+
+app.get("/get-contests", async (req, res) => {
+	const data = await Contests.find({}).lean();
+	res.send(data);
+});
+
+app.get("/all_contests", async (req, res) => {
+	let fetched_data = await axios.get("https://codeforces.com/api/contest.list?gym=false");
+	let data=fetched_data.data;
+	var contests = [];
+
+	for (var i = 0; i < data.result.length; i++) {
+		var id = data.result[i].id;
+		var name = data.result[i].name;
+		var startTime = data.result[i].startTimeSeconds;
+		var phase = data.result[i].phase;
+
+		if (name.length > 1 && startTime > 0 && phase !== "BEFORE") {
+			var item = {
+				contestId: parseInt(id),
+				name: name,
+				startTime: parseInt(startTime)
+			};
+
+			contests.push(item);
+		}
+	}
+
+	contests.sort(function (a, b) {
+		if (a.startTime > b.startTime) return -1;
+		if (a.startTime < b.startTime) return 1;
+		return 0;
+	});
+	// Worked only for single time
+	// for(let i=0;i<contests.length;i++)
+	// {
+	// 	let contest_id=contests[i].contestId;
+	// 	let contest_name=contests[i].name;
+	// 	let startTime=contests[i].startTime;
+	// 	try {
+	// 		const response = await Contests.create({
+	// 			contest_id : contest_id,
+	// 			contest_name : contest_name,
+	// 			startTime : startTime
+	// 		})
+	// 	} catch (error) {
+	// 		console.log(contest_id);
+	// 		console.log(error);
+	// 		break;
+	// 	}
+	// }
+	console.log(contests.length);
+	res.send(contests);
 });
 
 

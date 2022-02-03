@@ -2,6 +2,8 @@ import React from "react";
 import Login from "./Login";
 import Register from "./Register";
 import LeaderBoard from "./LeaderBoard";
+import PrevStandings from "./PrevStandings";
+import ContestStandings from "./ContestStandings";
 import { Routes , Route } from "react-router-dom";
 
 import PrivateRoute from "./privateRoute.js";
@@ -11,6 +13,8 @@ function App() {
     <div className="container">
       <Routes>
         <Route exact path='/' element={<PrivateRoute />}>
+          <Route exact path='/prevstandings' element={<PrevStandings />}/>
+          <Route exact path='/prevstandings/:id' element={<ContestStandings />}/>
           <Route exact path='/' element={<LeaderBoard />}/>
         </Route>
         <Route exact path="/login" element={<Login />}/>

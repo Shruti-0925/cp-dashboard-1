@@ -1,17 +1,5 @@
 import React, { useState } from "react";
-import { Navigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import $ from 'jquery';
-// window.jQuery=jQuery;
-const axios = require('axios');
-// const sorting = (col,users_data) =>{
-//     console.log("hello")
-//     const [data,setdata] = useState(users_data)
-//     const sorted =[...data].sort((a,b)=>
-//     a[col]>b[col] ? -1 : 1
-//     );
-//     setdata(sorted);
-// }
 class LeaderBoard extends React.Component {
     constructor(props) {
         super(props);
@@ -74,7 +62,7 @@ class LeaderBoard extends React.Component {
                             </tr>
                         </thead>
                         <tbody>
-                            {users_data.map(user => (<tr>
+                            {users_data.map(user => (<tr id={user.cf_handle}>
                                 <td><a href={'https://codeforces.com/profile/'+user.cf_handle} target="_blank">{user.cf_handle}</a></td>
                                 <td>{user.batch}</td>
                                 <td>{user.num_of_questions}</td>
