@@ -2,17 +2,26 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { Helmet } from "react-helmet";
+var otp1 = ''; var otp2 = '';
 
 function Register() {
     const [cf_handle, setCFHandle] = useState("");
     const [cf_email, setCFEmail] = useState("");
     const [inst_email, setInstEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [instotp, setInstotp] = useState("");
+    const [cfotp, setCfotp] = useState("");
     const [confirmpassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
+    const [show, setShow] = useState(false);
 
     const registerHandler = async (e) => {
-        e.preventDefault();
+        e.preventDefault();        
+        const check = validateOTP();
+       /* console.log(cfotp)
+        console.log(instotp)*/
+        console.log(check)
+        if (check){
         const url = "https://codeforces.com/api/user.info?handles=" + cf_handle;
         const config = {
             header: {
@@ -70,7 +79,9 @@ function Register() {
                             cf_handle,
                             cf_email,
                             inst_email,
-                            password
+                            password,
+                            instotp,
+                            cfotp,
                         },
                         config
                     );
@@ -95,95 +106,164 @@ function Register() {
                     return setError("CF Handle doesn't refer to provided cf email")
                 }
             }
-        });
+        });}
+    };
+    const validateOTP = () => {
+        if (cfotp == otp1 && instotp == otp2 && instotp !=="" && cfotp!="") {
+            console.log('true')
+            return true;
+        }
+        return false;
+    };
+    const OTPgen = () => {
+        alert("debug")
+        setShow(true);
+        otp1 = (Math.floor(900000 * Math.random()) + 100000).toString();
+        otp2 = (Math.floor(900000 * Math.random()) + 100000).toString();
+        console.log(otp1);
+        console.log(otp2);
+        console.log(typeof otp1);
+        console.log(typeof cfotp);
+        //     console.log("email try1")
+        let details1 = {
+            email:cf_email,
+            message: otp1,
+          };
+          let details2= {
+            email:inst_email,
+            message: otp2,
+          };
+        
+        fetch("/api/send_email", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify(details1),
+          });  
+          fetch("/api/send_email", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify(details2),
+          });      
+
     };
 
     return (
-        <div>
-            <Helmet>
-                <link rel="stylesheet" href="login.css" />
-            </Helmet>
-            <h1> Welcome</h1>
-            <img
-                className="circle-img"
-                src="https://iitmandi.ac.in/institute/images/iitmandi_logo.png"
-                alt="avatar_img"
-            />
-            <form onSubmit={registerHandler}>
-                {error && <span className="error-message">{error}</span>}
-                <div className="input-group">
-                    <div id="user-text">CF-Handle</div>
-                    <input
-                        id="cf_handle"
-                        type="text"
-                        name="cf_handle"
-                        value={cf_handle}
-                        onChange={(e) => setCFHandle(e.target.value)}
-                    />
-                </div>
-
-                <div className="input-group">
-                    <div id="user-text">CF Email</div>
-                    <input
-                        id="cf_email"
-                        type="email"
-                        name="cf_email"
-                        value={cf_email}
-                        onChange={(e) => setCFEmail(e.target.value)}
-                    />
-                </div>
-
-                <div className="input-group">
-                    <div id="user-text">Inst Email</div>
-                    <input
-                        id="inst_email"
-                        type="email"
-                        name="inst_email"
-                        value={inst_email}
-                        onChange={(e) => setInstEmail(e.target.value)}
-                    />
-                </div>
-
-                <div className="input-group">
-                    <div id="pwd-text">Password</div>
-                    <input
-                        id="pw"
-                        type="password"
-                        name="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-                <div className="input-group">
-                    <div id="pwd-text-2">Confirm Password</div>
-                    <input
-                        id="pw-2"
-                        type="password"
-                        name="password"
-                        value={confirmpassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                    />
-                </div>
-
-                <button
-                    type="submit"
-                    id="signup"
-                >
-                    Register
-                </button>
-                <br />
-                <span>Already have an account? <Link to="/login">Login</Link> </span>
-            </form>
-            <ul class="box-area">
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-            </ul>
-        </div>
-    );
-}
-
-export default Register;
+            <div>
+                <Helmet>
+                    <link rel="stylesheet" href="login.css" />
+                </Helmet>
+                <h1> Welcome</h1>
+                <img
+                    className="circle-img"
+                    src="https://iitmandi.ac.in/institute/images/iitmandi_logo.png"
+                    alt="avatar_img"
+                />
+                <form onSubmit={registerHandler}>
+                    {error && <span className="error-message">{error}</span>}
+                    {!show ? <div className="input-group">
+                        <div id="user-text">CF-Handle</div>
+                        <input
+                            id="cf_handle"
+                            type="text"
+                            name="cf_handle"
+                            value={cf_handle}
+                            onChange={(e) => setCFHandle(e.target.value)}
+                        />
+                    </div> : null}
+    
+                    {!show ? <div className="input-group">
+                        <div id="user-text">CF Email</div>
+                        <input
+                            id="cf_email"
+                            type="email"
+                            name="cf_email"
+                            value={cf_email}
+                            onChange={(e) => setCFEmail(e.target.value)}
+                        />
+                    </div>
+                        : null}
+    
+                    {!show ? <div className="input-group">
+                        <div id="user-text">Inst Email</div>
+                        <input
+                            id="inst_email"
+                            type="email"
+                            name="inst_email"
+                            value={inst_email}
+                            onChange={(e) => setInstEmail(e.target.value)}
+                        />
+                    </div> : null}
+    
+                    {!show ? <div className="input-group">
+                        <div id="pwd-text">Password</div>
+                        <input
+                            id="pw"
+                            type="password"
+                            name="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </div> : null}
+                    {!show ? <div className="input-group">
+                        <div id="pwd-text-2">Confirm Password</div>
+                        <input
+                            id="pw-2"
+                            type="password"
+                            name="password"
+                            value={confirmpassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
+                    </div> : null}
+                    {show ? <div className="input-group">
+                        <div id="cfotp-text-2">OTP sent on cf mail ID.</div>
+                        <input
+                            id="cfotp"
+                            type="text"
+                            name="cfotp"
+                            value={cfotp}
+                            onChange={(e) => setCfotp(e.target.value)}
+                        />
+                    </div> : null}
+                    {show ? <div className="input-group">
+                        <div id="instotp-text-2">OTP sent on institue mail ID.</div>
+                        <input
+                            id="instotp"
+                            type="text"
+                            name="instotp"
+                            value={instotp}
+                            onChange={(e) => setInstotp(e.target.value)}
+                        />
+                    </div> : null}
+                    
+                    {!show ? <button
+                        onClick={OTPgen}
+                        id="signup"
+                    >
+                        Register
+                    </button> : null}
+                    {show ? <button
+                        type="submit"
+                        id="signup"
+                    >
+                        Submit OTP.
+                    </button> : null}
+                    <br />
+                    <span>Already have an account? <Link to="/login">Login</Link> </span>
+                </form>
+                <ul class="box-area">
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+            </div>
+        );
+    }
+    
+    export default Register;

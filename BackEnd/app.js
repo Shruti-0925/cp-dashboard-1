@@ -6,7 +6,7 @@ const path=require("path");
 const bcrypt = require('bcrypt');
 const mongoose = require("mongoose");
 const axios = require('axios');
-
+const nodemailer = require("nodemailer");
 // Connecting with database
 const url="mongodb+srv://cp-user:12345@cluster.ye5s9.mongodb.net/CP-Dashboard?retryWrites=true&w=majority"
 mongoose.connect(String(url),{ useNewUrlParser: true , useUnifiedTopology: true});
@@ -165,7 +165,44 @@ app.post('/api/register', async (req, res) => {
 	}
 })
 
-
+const otpEmail = nodemailer.createTransport({
+	host: "smtp.gmail.com",
+	port: 587,
+	secure: false,
+	requireTLS: true,
+	auth: {
+	
+	 user: "**********@gmail.com",
+	  pass: "********",
+	},
+  });
+  
+  otpEmail.verify((error) => {
+	if (error) {
+	  console.log(error);
+	} else {
+	  console.log("Ready to Send");
+	}
+  });
+  app.post("/api/send_email", async (req, res) => {
+	const message = req.body.message;
+	const email=req.body.email;
+	const mail = {
+	  from: "**********@gmail.com",
+	  to: email,
+	  subject: "OTP Verification",
+	  html: `<p>OTP for CP Dashboard is ${message}.</p>`,
+	};
+	otpEmail.sendMail(mail, (error) => {
+	  if (error) {
+		  console.log(error);
+		res.json({ status: "ERROR" });
+	  } else {
+		  console.log("mail sent");
+		res.json({ status: "Message Sent" });
+	  }
+	});
+  });
 app.get("/leaderboard", async (req, res) => {
 	const data = await User.find({}).lean();
 	res.send(data);
