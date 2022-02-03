@@ -80,8 +80,8 @@ function Register() {
                             cf_email,
                             inst_email,
                             password,
-                            instotp,
-                            cfotp,
+                            // instotp,
+                            // cfotp,
                         },
                         config
                     );

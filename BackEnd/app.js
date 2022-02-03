@@ -2,7 +2,7 @@
 var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
-const path=require("path");
+const path = require("path");
 const bcrypt = require('bcrypt');
 const mongoose = require("mongoose");
 const axios = require('axios');
@@ -10,37 +10,48 @@ const nodemailer = require("nodemailer");
 const { Timestamp } = require("mongodb");
 
 // Connecting with database
-const url="mongodb+srv://cp-user:12345@cluster.ye5s9.mongodb.net/CP-Dashboard?retryWrites=true&w=majority"
-mongoose.connect(String(url),{ useNewUrlParser: true , useUnifiedTopology: true});
+const url = "mongodb+srv://cp-user:12345@cluster.ye5s9.mongodb.net/CP-Dashboard?retryWrites=true&w=majority"
+mongoose.connect(String(url), { useNewUrlParser: true, useUnifiedTopology: true });
 
 // Cofiguring app
 app.set("views", __dirname + "/views");
 app.set("view engine", "ejs");
-const publicdirectory = path.join(__dirname,'./public')
+const publicdirectory = path.join(__dirname, './public')
 app.use(express.static(publicdirectory));
 app.use(bodyParser.json());
 
 // Defining Schema
 const userSchema = new mongoose.Schema(
 	{
-		cf_handle : {type : String, required:true, unique: true},
-		cf_email : {type : String,required : true},
-		inst_email : {type : String,required : true},
-		password : {type : String,required : true},
-		contests : {type : String,required : true},
-		max_rating : {type : String,required : true},
-		num_of_questions : {type : String,required : true},
-		batch : {type : String, required : true},
+		cf_handle: { type: String, required: true, unique: true },
+		cf_email: { type: String, required: true },
+		inst_email: { type: String, required: true },
+		password: { type: String, required: true },
+		contests: { type: String, required: true },
+		max_rating: { type: String, required: true },
+		num_of_questions: { type: String, required: true },
+		batch: { type: String, required: true },
+		contests : [
+			{
+				contestId: {type : Number,required : true},
+				contestName: {type:String,required:true},
+				handle: {type:String,required:true},
+				rank: {type : Number,required : true},
+				ratingUpdateTimeSeconds: {type : Number,required : true},
+				oldRating: {type : Number,required : true},
+				newRating: {type : Number,required : true}
+			}
+		]
 	},
-	{ collection: 'Password-Details'}
+	{ collection: 'Password-Details' }
 );
 const contestSchema = new mongoose.Schema(
 	{
-		contest_id : {type : Number, required:true, unique: true},
-		contest_name : {type : String, required:true, unique:true},
-		start_time : {type : String}
+		contest_id: { type: Number, required: true, unique: true },
+		contest_name: { type: String, required: true, unique: true },
+		start_time: { type: String }
 	},
-	{ collection: 'All-Contests'}
+	{ collection: 'All-Contests' }
 );
 const User = mongoose.model('UserSchema', userSchema);
 const Contests = mongoose.model('ContestSchema', contestSchema);
@@ -49,26 +60,23 @@ const Contests = mongoose.model('ContestSchema', contestSchema);
 
 // Function for getting details of a user while registering
 async function make_api_call(cf_handle) {
-	const cf_api="https://codeforces.com/api/";
-	const req1= await axios.get(cf_api + "user.status?handle=" + cf_handle); 
-	const req2= await axios.get(cf_api + "user.rating?handle=" + cf_handle); 
-	const req3= await axios.get(cf_api + "user.info?handles=" + cf_handle); 
-	let number_of_solved_questions=0;
-	let max_rating=0;
-	let number_of_contests=0;
-	async function get_details () {
-		try
-		{
-			let res = await axios.all([req1,req2, req3]).then(axios.spread((...responses) => {
+	const cf_api = "https://codeforces.com/api/";
+	const req1 = await axios.get(cf_api + "user.status?handle=" + cf_handle);
+	const req2 = await axios.get(cf_api + "user.rating?handle=" + cf_handle);
+	const req3 = await axios.get(cf_api + "user.info?handles=" + cf_handle);
+	let number_of_solved_questions = 0;
+	let max_rating = 0;
+	let number_of_contests = 0;
+	async function get_details() {
+		try {
+			let res = await axios.all([req1, req2, req3]).then(axios.spread((...responses) => {
 				const responseOne = responses[0];
 				const responseTwo = responses[1];
 				const responesThree = responses[2];
 				let all_attempted_questions = [];
-				for(let i=0;i<responseOne.data.result.length;i++)
-				{
-					if(responseOne.data.result[i].verdict === 'OK')
-					{
-						let str = String(responseOne.data.result[i].problem.contestId) + '-'+ responseOne.data.result[i].problem.index;
+				for (let i = 0; i < responseOne.data.result.length; i++) {
+					if (responseOne.data.result[i].verdict === 'OK') {
+						let str = String(responseOne.data.result[i].problem.contestId) + '-' + responseOne.data.result[i].problem.index;
 						all_attempted_questions.push(str);
 					}
 				}
@@ -77,12 +85,12 @@ async function make_api_call(cf_handle) {
 				max_rating = responesThree.data.result[0].maxRating;
 			}))
 		}
-		catch(err){
+		catch (err) {
 			console.log(err);
 		}
 	}
 	await get_details();
-	return {num_of_questions : number_of_solved_questions , num_of_contests : number_of_contests , max_rating : max_rating};
+	return { num_of_questions: number_of_solved_questions, num_of_contests: number_of_contests, max_rating: max_rating };
 }
 
 // Useless but helpful
@@ -109,7 +117,7 @@ app.post('/api/login', async (req, res) => {
 	try {
 		if (await bcrypt.compare(password, user.password)) {
 
-			return res.json({ status: 'ok', token : '123' })
+			return res.json({ status: 'ok', token: '123' })
 		}
 	} catch (error) {
 		return res.json({ status: 'error', error: error })
@@ -121,7 +129,7 @@ app.post('/api/login', async (req, res) => {
 })
 app.post('/api/register', async (req, res) => {
 	// console.log(req.body)
-	const { cf_handle,cf_email,inst_email, password: plainTextPassword } = req.body
+	const { cf_handle, cf_email, inst_email, password: plainTextPassword } = req.body
 
 	if (!cf_handle || typeof cf_handle !== 'string') {
 		return res.json({ status: 'error', error: 'Invalid cf_handle' })
@@ -148,25 +156,28 @@ app.post('/api/register', async (req, res) => {
 	const password = await bcrypt.hash(plainTextPassword, 10);
 	let result;
 	await make_api_call(cf_handle).then((response) => {
-		result=response;
+		result = response;
 	});
+	let contests_details = await axios.get("https://codeforces.com/api/user.rating?handle="+"Lavish_Sachdeva");
+	let contests = contests_details.data.result;
 	let num_of_questions = result.num_of_questions;
 	let max_rating = result.max_rating;
-	let contests = result.num_of_contests;
-	let batch = "20"+inst_email.slice(1,3);
+	let num_of_contests = result.num_of_contests;
+	let batch = "20" + inst_email.slice(1, 3);
 	try {
 		const response = await User.create({
 			cf_handle,
 			cf_email,
 			inst_email,
 			password,
-			contests,
+			num_of_contests,
 			max_rating,
 			num_of_questions,
-			batch
+			batch,
+			contests
 		})
-		console.log('User created successfully: ', response)
-		return res.json({ status : 'ok', token : '123' });
+		console.log('User created successfully: ', response);
+		return res.json({ status: 'ok', token: '123' });
 	} catch (error) {
 		if (error.code === 11000) {
 			// duplicate key
@@ -174,6 +185,8 @@ app.post('/api/register', async (req, res) => {
 		}
 		throw error
 	}
+
+
 })
 
 const otpEmail = nodemailer.createTransport({
@@ -182,38 +195,38 @@ const otpEmail = nodemailer.createTransport({
 	secure: false,
 	requireTLS: true,
 	auth: {
-	
+
 	 user: "**********@gmail.com",
 	  pass: "********",
 	},
-  });
-  
-  otpEmail.verify((error) => {
+});
+
+otpEmail.verify((error) => {
 	if (error) {
-	  console.log(error);
+		console.log(error);
 	} else {
-	  console.log("Ready to Send");
+		console.log("Ready to Send");
 	}
-  });
-  app.post("/api/send_email", async (req, res) => {
+});
+app.post("/api/send_email", async (req, res) => {
 	const message = req.body.message;
-	const email=req.body.email;
+	const email = req.body.email;
 	const mail = {
-	  from: "**********@gmail.com",
-	  to: email,
-	  subject: "OTP Verification",
-	  html: `<p>OTP for CP Dashboard is ${message}.</p>`,
+		from: "**********@gmail.com",
+		to: email,
+		subject: "OTP Verification",
+		html: `<p>OTP for CP Dashboard is ${message}.</p>`,
 	};
 	otpEmail.sendMail(mail, (error) => {
-	  if (error) {
-		  console.log(error);
-		res.json({ status: "ERROR" });
-	  } else {
-		  console.log("mail sent");
-		res.json({ status: "Message Sent" });
-	  }
+		if (error) {
+			console.log(error);
+			res.json({ status: "ERROR" });
+		} else {
+			console.log("mail sent");
+			res.json({ status: "Message Sent" });
+		}
 	});
-  });
+});
 app.get("/leaderboard", async (req, res) => {
 	const data = await User.find({}).lean();
 	res.send(data);
@@ -226,7 +239,7 @@ app.get("/get-contests", async (req, res) => {
 
 app.get("/all_contests", async (req, res) => {
 	let fetched_data = await axios.get("https://codeforces.com/api/contest.list?gym=false");
-	let data=fetched_data.data;
+	let data = fetched_data.data;
 	var contests = [];
 
 	for (var i = 0; i < data.result.length; i++) {
@@ -273,9 +286,31 @@ app.get("/all_contests", async (req, res) => {
 	res.send(contests);
 });
 
+app.get("/contest-info/:contest_id", async (req, res) => {
+	const id = req.params.contest_id;
+	console.log(id);
+	// let contests_details = await axios.get("https://codeforces.com/api/user.rating?handle="+"Lavish_Sachdeva");
+	// let contests = contests_details.data.result;
+	// console.log(contests)
+	// try {
+	// 	const response = await userContests.create({
+	// 		cf_handle,
+	// 		contests,
+	// 	})
+	// 	console.log('User created successfully: ', response)
+	// 	return res.json({ status: 'ok', token: '123' });
+	// } catch (error) {
+	// 	if (error.code === 11000) {
+	// 		// duplicate key
+	// 		return res.json({ status: 'error', error: 'CF Handle already in use' })
+	// 	}
+	// 	throw error
+	// }
+	res.json({ status: 'error', error: 'Invalid username/password' })
+});
 
 // Hosting it
 var port = process.env.PORT || 5000;
 app.listen(port, function () {
-    console.log("Server started at: http://localhost:" + String(port) + "/");
+	console.log("Server started at: http://localhost:" + String(port) + "/");
 });
