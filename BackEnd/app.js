@@ -27,21 +27,10 @@ const userSchema = new mongoose.Schema(
 		cf_email: { type: String, required: true },
 		inst_email: { type: String, required: true },
 		password: { type: String, required: true },
-		contests: { type: String, required: true },
+		num_of_contests: { type: String, required: true },
 		max_rating: { type: String, required: true },
 		num_of_questions: { type: String, required: true },
 		batch: { type: String, required: true },
-		contests : [
-			{
-				contestId: {type : Number,required : true},
-				contestName: {type:String,required:true},
-				handle: {type:String,required:true},
-				rank: {type : Number,required : true},
-				ratingUpdateTimeSeconds: {type : Number,required : true},
-				oldRating: {type : Number,required : true},
-				newRating: {type : Number,required : true}
-			}
-		]
 	},
 	{ collection: 'Password-Details' }
 );
@@ -53,8 +42,24 @@ const contestSchema = new mongoose.Schema(
 	},
 	{ collection: 'All-Contests' }
 );
+const userContestSchema = new mongoose.Schema(
+	{
+		contest_id: { type: Number, required: true, unique: true },
+		contest_name: { type: String, required: true, unique: true },
+		participants: [
+			{
+				cf_handle: { type: String, required: true, uniqueItems: true },
+				rank: { type: Number, required: true },
+				oldRating: { type: Number, required: true },
+				newRating: { type: Number, required: true }
+			}
+		],
+	},
+	{ collection: 'User-Contests' }
+);
 const User = mongoose.model('UserSchema', userSchema);
 const Contests = mongoose.model('ContestSchema', contestSchema);
+const UserContests = mongoose.model('userContestSchema', userContestSchema);
 
 // Main Work
 
@@ -130,6 +135,10 @@ app.post('/api/login', async (req, res) => {
 app.post('/api/register', async (req, res) => {
 	// console.log(req.body)
 	const { cf_handle, cf_email, inst_email, password: plainTextPassword } = req.body
+	const user = await User.findOne({ cf_handle }).lean();
+	if(user){
+		return res.json({ status: 'error', error: 'CF Handle already in use' });
+	}
 
 	if (!cf_handle || typeof cf_handle !== 'string') {
 		return res.json({ status: 'error', error: 'Invalid cf_handle' })
@@ -158,8 +167,8 @@ app.post('/api/register', async (req, res) => {
 	await make_api_call(cf_handle).then((response) => {
 		result = response;
 	});
-	let contests_details = await axios.get("https://codeforces.com/api/user.rating?handle="+"Lavish_Sachdeva");
-	let contests = contests_details.data.result;
+	let contests_details = await axios.get("https://codeforces.com/api/user.rating?handle=" + cf_handle);
+	let contests_array = contests_details.data.result;
 	let num_of_questions = result.num_of_questions;
 	let max_rating = result.max_rating;
 	let num_of_contests = result.num_of_contests;
@@ -174,10 +183,8 @@ app.post('/api/register', async (req, res) => {
 			max_rating,
 			num_of_questions,
 			batch,
-			contests
 		})
 		console.log('User created successfully: ', response);
-		return res.json({ status: 'ok', token: '123' });
 	} catch (error) {
 		if (error.code === 11000) {
 			// duplicate key
@@ -185,8 +192,45 @@ app.post('/api/register', async (req, res) => {
 		}
 		throw error
 	}
+	for (var i = 0; i < contests_array.length; i++) {
+		const contest_id = contests_array[i].contestId;
+		const contest_name = contests_array[i].contestName;
+		const contest = await UserContests.findOne({ contest_id }).lean()
+		if (!contest) {
+			const participants = [{
+				cf_handle: cf_handle,
+				rank: contests_array[i].rank,
+				oldRating: contests_array[i].oldRating,
+				newRating: contests_array[i].newRating,
+			}]
+			try {
+				const response = await UserContests.create({
+					contest_id,
+					contest_name,
+					participants
+				})
+				console.log("created", contest_id);
+			} catch (error) {
+				console.log(error);
+			}
+			// console.log("Contest Created",response);
+		}
+		else {
+			const participants = {
+				cf_handle: cf_handle,
+				rank: contests_array[i].rank,
+				oldRating: contests_array[i].oldRating,
+				newRating: contests_array[i].newRating,
+			}
 
-
+			UserContests.findOneAndUpdate(
+				{ contest_id: contest_id },
+				{ $addToSet: { participants: participants } },
+			);
+			console.log("pushed",contest_id);
+		}
+	}
+	return res.json({ status: 'ok', token: '123' });
 })
 
 const otpEmail = nodemailer.createTransport({
@@ -196,8 +240,8 @@ const otpEmail = nodemailer.createTransport({
 	requireTLS: true,
 	auth: {
 
-	 user: "**********@gmail.com",
-	  pass: "********",
+		user: "**********@gmail.com",
+		pass: "********",
 	},
 });
 
@@ -237,6 +281,7 @@ app.get("/get-contests", async (req, res) => {
 	res.send(data);
 });
 
+// For backend use only - one time
 app.get("/all_contests", async (req, res) => {
 	let fetched_data = await axios.get("https://codeforces.com/api/contest.list?gym=false");
 	let data = fetched_data.data;
@@ -288,25 +333,25 @@ app.get("/all_contests", async (req, res) => {
 
 app.get("/contest-info/:contest_id", async (req, res) => {
 	const id = req.params.contest_id;
-	console.log(id);
-	// let contests_details = await axios.get("https://codeforces.com/api/user.rating?handle="+"Lavish_Sachdeva");
-	// let contests = contests_details.data.result;
-	// console.log(contests)
-	// try {
-	// 	const response = await userContests.create({
-	// 		cf_handle,
-	// 		contests,
-	// 	})
-	// 	console.log('User created successfully: ', response)
-	// 	return res.json({ status: 'ok', token: '123' });
-	// } catch (error) {
-	// 	if (error.code === 11000) {
-	// 		// duplicate key
-	// 		return res.json({ status: 'error', error: 'CF Handle already in use' })
-	// 	}
-	// 	throw error
-	// }
-	res.json({ status: 'error', error: 'Invalid username/password' })
+	const dummy = [
+		{
+			cf_handle : '-',
+			rank : '-',
+			oldRating : '-',
+			newRating : '-',
+		}
+	]
+	if(id==='None')
+	{
+		return res.send({status: "Wrong Contest", data : dummy, contest_name : "None"});
+	}
+	const contest = await UserContests.findOne({ contest_id : id }).lean();
+	const contest_details = await Contests.findOne({contest_id : id}).lean();
+	if(!contest)
+	{
+		return res.send({status: "no users", data : dummy, contest_name : contest_details.contest_name});
+	}
+	return res.send({status:"ok" , data : contest.participants, contest_name : contest_details.contest_name});
 });
 
 // Hosting it

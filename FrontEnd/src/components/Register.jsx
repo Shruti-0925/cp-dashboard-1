@@ -80,8 +80,8 @@ function Register() {
                             cf_email,
                             inst_email,
                             password,
-                            // instotp,
-                            // cfotp,
+                            instotp,
+                            cfotp,
                         },
                         config
                     );
@@ -113,7 +113,7 @@ function Register() {
             console.log('true')
             return true;
         }
-        return false;
+        return true; //to be changed to false 
     };
     const OTPgen = () => {
         alert("debug")
