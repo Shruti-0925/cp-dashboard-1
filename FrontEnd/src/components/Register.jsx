@@ -129,10 +129,14 @@ function Register() {
         let details1 = {
             email: cf_email,
             message: otp1,
+            message: "OTP for CP DashBoard is "+otp1,
+            sub:"CP DashBoard: OTP Verification",
         };
         let details2 = {
             email: inst_email,
             message: otp2,
+            message: "OTP for CP DashBoard is "+otp2,
+            sub:"CP DashBoard: OTP Verification",
         };
 
         fetch("/api/send_email", {

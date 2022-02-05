@@ -1,35 +1,56 @@
 import React, { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
+var otp = '';
+var check = true;
+var pswd = '';
 function Login() {
     const [isMouseover, setMouseover] = useState(false);
     const [cf_handle, setCFHandle] = useState("");
     const [password, setPassword] = useState("");
+    const [inst_email, setInstEmail] = useState("");
+    const [instotp, setInstotp] = useState("");
     const [error, setError] = useState("");
-
+    const [new_password, setnewPassword] = useState("");
+    const [c_password, setcPassword] = useState("");
+    const [islogin, setIslogin] = useState(true);
+    const [ismail, setIsmail] = useState(false);
+    const [isotp, setIsotp] = useState(false);
+    const [isnewpwd, setIsnewpwd] = useState(false);
     const loginHandler = async (e) => {
         e.preventDefault();
+        if (check) { pswd = password; } else { pswd = new_password; }
+        /* console.log("paswd")
+         console.log(pswd);
+         console.log("updating password")*/
+         const check1 = matchpswd();
+        /* console.log("status")
+         console.log(check);
+         console.log(check1);*/
+         if (check || check1) {            
+             console.log("login")
+             let details={
+                 cf_handle:cf_handle,
+                 password:pswd,
+             };
+             const result = await fetch("/api/login", {
+                 method: "POST",
+                 headers: {
+                     "Content-Type": "application/json",
+                 },
+                 body: JSON.stringify(details),
+             }).then((res) => res.json());
 
-        const result = await fetch("/api/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                cf_handle,
-                password,
-            }),
-        }).then((res) => res.json());
-
-        if (result.status === "ok") {
-            console.log(result)
-            var token = result.token;
-            sessionStorage.setItem("authToken", token);
-            console.log(history);
-            history.pushState({ urlPath: '/login' }, '', "/");
-            window.location.reload();
-        } else {
-            alert(result.error);
+            if (result.status === "ok") {
+                console.log(result)
+                var token = result.token;
+                sessionStorage.setItem("authToken", token);
+                console.log(history);
+                history.pushState({ urlPath: '/login' }, '', "/");
+                window.location.reload();
+            } else {
+                alert(result.error);
+            }
         }
     }
 
@@ -39,7 +60,73 @@ function Login() {
     function hot() {
         setMouseover(false);
     }
+    const fpswd = () => {
+        check = false;
+        console.log("forget pswd")
+        setIslogin(false);
+        setIsmail(true);
+    }
+    const rpswd = () => {
+        console.log("reset pswd")
+        setIsmail(false);
+        setIsotp(true);
+        otp = (Math.floor(900000 * Math.random()) + 100000).toString();
+        console.log(otp);
+        console.log(inst_email);
+        let details = {
+            email: inst_email,
+            message: otp,
+        };
 
+        fetch("/api/send_email", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+            },
+            body: JSON.stringify(details),
+        });
+        console.log("mail sent")
+    }
+    const validateOTP = () => {
+        console.log("validating otp")
+        if (instotp == otp && instotp !== "") {
+            console.log('true')
+            return true;
+        }
+        return false;
+    };
+    const subOTP = () => {
+        console.log("submit otp")
+        var check = validateOTP();
+        if (check) {
+            setIsotp(false);
+            setIsnewpwd(true);
+        }
+        else {
+            console.log("invalid otp");
+        }
+    }
+    const matchpswd = async () => {
+        if (new_password == c_password && new_password != "") {
+            console.log("new pswd")
+            console.log(new_password);
+            console.log("old pswd");
+            console.log(password);
+            let details = {
+                cf_handle: cf_handle,
+                new_pswd: new_password,
+            };            
+             fetch("/api/reset", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json;charset=utf-8",
+                },
+                body: JSON.stringify(details),
+            });
+            return true;
+        }
+        return false;
+    }
     return (
         <div>
 
@@ -54,7 +141,7 @@ function Login() {
             />
             <form onSubmit={loginHandler}>
                 {error && <span className="error-message">{error}</span>}
-                <div className="input-group">
+                {islogin ? <div className="input-group">
                     <div id="user-text">CF-Handle</div>
                     <input
                         id="cf_handle"
@@ -63,9 +150,9 @@ function Login() {
                         value={cf_handle}
                         onChange={(e) => setCFHandle(e.target.value)}
                     />
-                </div>
+                </div> : null}
 
-                <div className="input-group">
+                {islogin ? <div className="input-group">
                     <div id="pwd-text">Password</div>
                     <input
                         id="pw"
@@ -74,18 +161,89 @@ function Login() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                </div>
+                </div> : null}
 
-                <button
+                {ismail ? <div className="input-group">
+                    <div id="user-text">Institute Email</div>
+                    <input
+                        id="inst_email"
+                        type="email"
+                        name="inst_email"
+                        value={inst_email}
+                        onChange={(e) => setInstEmail(e.target.value)}
+                    />
+                </div> : null}
+                {ismail ?
+                    <button
+                        onClick={rpswd}
+                        id="login"
+                    >
+                        Reset Password
+                    </button> : null}
+                {isotp ?
+                    <div className="input-group">
+                        <div id="instotp-text-2">OTP sent on institue mail ID.</div>
+                        <input
+                            id="instotp"
+                            type="text"
+                            name="instotp"
+                            value={instotp}
+                            onChange={(e) => setInstotp(e.target.value)}
+                        />
+                    </div> : null}
+                {isotp ?
+                    <button
+                        onClick={subOTP}
+                        id="login"
+                    >
+                        Submit OTP
+                    </button> : null}  {isnewpwd ?
+                        <div className="input-group">
+                            <div id="pwd-text">New Password</div>
+                            <input
+                                id="pw"
+                                type="password"
+                                name="password"
+                                value={new_password}
+                                onChange={(e) => setnewPassword(e.target.value)}
+                            />
+                        </div> : null}
+                {isnewpwd ?
+                    <div className="input-group">
+                        <div id="pwd-text">Confirm Password</div>
+                        <input
+                            id="pw"
+                            type="password"
+                            name="password"
+                            value={c_password}
+                            onChange={(e) => setcPassword(e.target.value)}
+                        />
+                    </div> : null}
+                {isnewpwd ?
+                    <button
+                        type="submit"
+                        id="login"
+                    >
+                        Update Password
+                    </button> : null}
+                <br /><br />
+                {islogin ?
+                    <button
+                        onClick={fpswd}
+                        id="login"
+                    >
+                        Forgot Password?
+                    </button> : null}<br /><br />
+                {islogin ? <button
                     type="submit"
                     id="login"
                 >
                     Login
-                </button>
+                </button> : null}
                 <br />
-                <span>
+                {islogin ? <span>
                     Don't have account? <Link to="/register">Register</Link>
-                </span>
+                </span> : null}
             </form>
             <ul class="box-area">
                 <li></li>

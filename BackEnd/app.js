@@ -132,6 +132,27 @@ app.post('/api/login', async (req, res) => {
 
 
 })
+app.post('/api/reset', async(req,res)=>{
+	console.log("reset");
+	const cf_handle=req.body.cf_handle;
+	const new_pswd=req.body.new_pswd;
+	const hashpswd = await bcrypt.hash(new_pswd, 10);
+	User.updateOne({cf_handle}, 
+		{password:hashpswd}, function (err, docs) {
+		if (err){
+			console.log(err)
+		}
+		else{
+			console.log("Updated Docs : ", docs);
+		}
+	});
+	//const user = await User.findOne({ cf_handle }).lean()
+	//console.log(user.password);
+	//user.password=new_pswd;
+	//user.save(function(){});
+	//await user.save();
+	//return res.json({ status: 'error', error: user.id });
+})
 app.post('/api/register', async (req, res) => {
 	// console.log(req.body)
 	const { cf_handle, cf_email, inst_email, password: plainTextPassword } = req.body
@@ -255,11 +276,17 @@ otpEmail.verify((error) => {
 app.post("/api/send_email", async (req, res) => {
 	const message = req.body.message;
 	const email = req.body.email;
+	const sub=req.body.sub;
+	const email=req.body.email;
 	const mail = {
-		from: "**********@gmail.com",
+		from: "****@gmail.com",
 		to: email,
 		subject: "OTP Verification",
 		html: `<p>OTP for CP Dashboard is ${message}.</p>`,
+	  from: "****@gmail.com",
+	  to: email,
+	  subject: sub,
+	  html: `<p>${message}</p>`,
 	};
 	otpEmail.sendMail(mail, (error) => {
 		if (error) {
