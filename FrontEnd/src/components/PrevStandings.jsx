@@ -69,20 +69,14 @@ class PrevStandings extends React.Component {
         <div class="animation start-home"></div>
     </nav>
               <div class = "content">
-                    <select
+                    <select className="select-style"
                         value={selectedOption}
                         onChange={this.handleChange}
                     >
-                        <option value="None">------</option>
+                        <option value="None">Select Contest</option>
                         {contests_data.map((contest) => <option value={contest.contest_id} key={contest.contest_id}>{contest.contest_name}</option>)}
                     </select>
-                    <span>{selectedOption}</span>
-                    <br />
-                    <br />
-                    <br />
-                    <button>
-                        <a href={`prevstandings?contest_id=${selectedOption}`}>Get Ratings</a>
-                    </button>
+                    <p className="p-styling"><a className="a-button" href={`prevstandings?contest_id=${selectedOption}`}>Get Ratings</a></p>
                     <Helmet><link type="text/css" rel="stylesheet" href="leaderboard.css" /></Helmet>
                 </div>
                 </div>
