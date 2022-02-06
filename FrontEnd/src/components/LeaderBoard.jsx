@@ -32,7 +32,18 @@ class LeaderBoard extends React.Component {
         else {
 
             return (
+                
                 <div className="all">
+                 <nav>
+        <a href="">LeaderBoard</a>
+       
+        <a href="/PrevStandings">Contests Standings</a>
+        {/* <a href="#">field3</a>
+        <a href="#">field4</a>
+        <a href="#">field5</a> */}
+        <div class="animation start-home"></div>
+    </nav>
+      
                     <div className="container">
                         <h1>LEADERBOARD</h1>
 
@@ -86,7 +97,7 @@ class LeaderBoard extends React.Component {
                             <script src="filter.js"></script>
                             <link type="text/css" rel="stylesheet" href="leaderboard.css" />
                         </Helmet>
-
+                    
                     </div>
                 </div>
             )

@@ -277,7 +277,7 @@ app.post("/api/send_email", async (req, res) => {
 	const message = req.body.message;
 	const email = req.body.email;
 	const sub=req.body.sub;
-	const email=req.body.email;
+	//const email=req.body.email;
 	const mail = {
 		from: "****@gmail.com",
 		to: email,

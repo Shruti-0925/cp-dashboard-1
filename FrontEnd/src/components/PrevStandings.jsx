@@ -86,6 +86,15 @@ class PrevStandings extends React.Component {
         else {
             return (
                 <div className="all">
+                <nav>
+        <a href="../">LeaderBoard</a>
+       
+        <a href="/PrevStandings">Contests Standings</a>
+        {/* <a href="#">field3</a>
+        <a href="#">field4</a>
+        <a href="#">field5</a> */}
+        <div class="animation start-home"></div>
+    </nav>
                     <div className="container">
                         <h1>Previous Standings</h1>
                         <h1>For Contest - {contestName}</h1>
