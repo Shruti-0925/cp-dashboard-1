@@ -251,3 +251,34 @@ left: 470;
   text-decoration: none;}
 
 .emoji{vertical-align: middle;}
+
+/*css for prevStandings */
+.select-style{
+    background-color: #d6c9c9b0;
+    text-align: center;
+    padding:1%;
+    margin:auto;
+    border-radius: 8px;
+    margin-top:3%;
+}
+.a-button {
+    background-color: #d6c9c9b0;
+    margin: auto;
+    border-radius: 5px;
+    color:black;
+    padding:0.5%;
+    padding-left: 1%;
+    padding-right: 1%;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+  }
+.a-button:hover{
+    background-color: rgb(86, 95, 114);
+    color:white;
+}
+.p-styling{
+
+    margin-top:5%;
+    margin-left:7.9%;
+}
