@@ -114,15 +114,20 @@ async function make_api_call(cf_handle) {
 // });
 
 app.post('/api/login', async (req, res) => {
-	const { cf_handle, password } = req.body;
+	const cf_handle=req.body.cf_handle;
+	const password=req.body.password;
 	const user = await User.findOne({ cf_handle }).lean()
 	if (!user) {
 		return res.json({ status: 'error', error: 'Invalid username/password' })
 	}
 	try {
+		console.log("login")
+		console.log(password)
+		console.log(user.password)
 		if (await bcrypt.compare(password, user.password)) {
 
 			return res.json({ status: 'ok', token: '123' })
+			return res.json({ status: 'ok', token : '123' })
 		}
 	} catch (error) {
 		return res.json({ status: 'error', error: error })
@@ -261,8 +266,8 @@ const otpEmail = nodemailer.createTransport({
 	requireTLS: true,
 	auth: {
 
-		user: "**********@gmail.com",
-		pass: "********",
+		user: "palpratiksha69@gmail.com",
+		pass: "Doiknowit?",
 	},
 });
 
@@ -279,11 +284,7 @@ app.post("/api/send_email", async (req, res) => {
 	const sub=req.body.sub;
 	//const email=req.body.email;
 	const mail = {
-		from: "****@gmail.com",
-		to: email,
-		subject: "OTP Verification",
-		html: `<p>OTP for CP Dashboard is ${message}.</p>`,
-	  from: "****@gmail.com",
+	  from: "palpratiksha69@gmail.com",
 	  to: email,
 	  subject: sub,
 	  html: `<p>${message}</p>`,

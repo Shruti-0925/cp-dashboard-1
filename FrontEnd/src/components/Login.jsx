@@ -20,13 +20,13 @@ function Login() {
     const loginHandler = async (e) => {
         e.preventDefault();
         if (check) { pswd = password; } else { pswd = new_password; }
-        /* console.log("paswd")
+         console.log("paswd")
          console.log(pswd);
-         console.log("updating password")*/
+         console.log("updating password")
          const check1 = matchpswd();
-        /* console.log("status")
+         console.log("status")
          console.log(check);
-         console.log(check1);*/
+         console.log(check1);
          if (check || check1) {            
              console.log("login")
              let details={
@@ -75,9 +75,10 @@ function Login() {
         console.log(inst_email);
         let details = {
             email: inst_email,
-            message: otp,
+            message: "OTP for resetting password is "+otp,
+            sub:"CP DashBoard: OTP Verification for Reset Password",
+            
         };
-
         fetch("/api/send_email", {
             method: "POST",
             headers: {
