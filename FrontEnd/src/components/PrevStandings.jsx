@@ -58,6 +58,17 @@ class PrevStandings extends React.Component {
         else if (contestId === '') {
             return (
                 <div>
+                
+                  <nav>
+        <a href="../">LeaderBoard</a>
+       
+        <a href="/PrevStandings">Contests Standings</a>
+        {/* <a href="#">field3</a>
+        <a href="#">field4</a>
+        <a href="#">field5</a> */}
+        <div class="animation start-home"></div>
+    </nav>
+              <div class = "content">
                     <select
                         value={selectedOption}
                         onChange={this.handleChange}
@@ -72,6 +83,8 @@ class PrevStandings extends React.Component {
                     <button>
                         <a href={`prevstandings?contest_id=${selectedOption}`}>Get Ratings</a>
                     </button>
+                    <Helmet><link type="text/css" rel="stylesheet" href="leaderboard.css" /></Helmet>
+                </div>
                 </div>
             )
         }
@@ -79,7 +92,17 @@ class PrevStandings extends React.Component {
         {
             return (
                 <div>
+                       <nav>
+        <a href="../">LeaderBoard</a>
+       
+        <a href="/PrevStandings">Contests Standings</a>
+        {/* <a href="#">field3</a>
+        <a href="#">field4</a>
+        <a href="#">field5</a> */}
+        <div class="animation start-home"></div>
+    </nav>
                     <h1>Option to sahi se select karle</h1>
+                    <Helmet><link type="text/css" rel="stylesheet" href="leaderboard.css" /></Helmet>
                 </div>
             )
         }
@@ -129,7 +152,7 @@ class PrevStandings extends React.Component {
                             </thead>
                             <tbody>
                                 {usersData.map(user => (<tr id={user.cf_handle}>
-                                    <td><a href={'https://codeforces.com/profile/' + user.cf_handle} target="_blank">{user.cf_handle}</a></td>
+                                    <td><a href={'https://codeforces.com/profile/' + user.cf_handle} target="_blank" style={{color: "white"}}>{user.cf_handle}</a></td>
                                     <td>{user.rank}</td>
                                     <td>{user.oldRating}</td>
                                     <td>{user.newRating}</td>

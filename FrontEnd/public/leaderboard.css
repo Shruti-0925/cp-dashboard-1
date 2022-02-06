@@ -186,6 +186,9 @@ nav .start-about,a:nth-child(2):hover~.animation{
 width: 300px;
 left: 200px;
 }
+.content{
+    padding: 100px;
+}
 /* a:nth-child(3){
     width: 100px;
 }
