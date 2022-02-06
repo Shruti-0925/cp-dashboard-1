@@ -127,7 +127,6 @@ app.post('/api/login', async (req, res) => {
 		if (await bcrypt.compare(password, user.password)) {
 
 			return res.json({ status: 'ok', token: '123' })
-			return res.json({ status: 'ok', token : '123' })
 		}
 	} catch (error) {
 		return res.json({ status: 'error', error: error })
@@ -266,8 +265,8 @@ const otpEmail = nodemailer.createTransport({
 	requireTLS: true,
 	auth: {
 
-		user: "palpratiksha69@gmail.com",
-		pass: "Doiknowit?",
+		user: "cp.dashboard.iitmandi@gmail.com",
+		pass: "A@123456",
 	},
 });
 
@@ -284,7 +283,7 @@ app.post("/api/send_email", async (req, res) => {
 	const sub=req.body.sub;
 	//const email=req.body.email;
 	const mail = {
-	  from: "palpratiksha69@gmail.com",
+	  from: "cp.dashboard.iitmandi@gmail.com",
 	  to: email,
 	  subject: sub,
 	  html: `<p>${message}</p>`,
