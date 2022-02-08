@@ -52,6 +52,10 @@ class PrevStandings extends React.Component {
     render() {
 
         const { DataisLoaded, contests_data, selectedOption, contestId, usersData, usersStatus, contestName} = this.state;
+   var ranks = []
+    for (var i=0; i < useState.length; i++) {
+        ranks.push(i+1);
+    }
 
         if (!DataisLoaded) return <div>
             <h1> Pleses wait some time.... </h1> </div>;
@@ -60,9 +64,10 @@ class PrevStandings extends React.Component {
                 <div>
                 
                   <nav>
+                  <a href="/PrevStandings">Contests Standings</a>
         <a href="../">LeaderBoard</a>
        
-        <a href="/PrevStandings">Contests Standings</a>
+      
         {/* <a href="#">field3</a>
         <a href="#">field4</a>
         <a href="#">field5</a> */}
@@ -87,9 +92,10 @@ class PrevStandings extends React.Component {
             return (
                 <div>
                        <nav>
+                       <a href="/PrevStandings">Contests Standings</a>
         <a href="../">LeaderBoard</a>
        
-        <a href="/PrevStandings">Contests Standings</a>
+        
         {/* <a href="#">field3</a>
         <a href="#">field4</a>
         <a href="#">field5</a> */}
@@ -104,9 +110,10 @@ class PrevStandings extends React.Component {
             return (
                 <div className="all">
                 <nav>
+                <a href="/PrevStandings">Contests Standings</a>
         <a href="../">LeaderBoard</a>
        
-        <a href="/PrevStandings">Contests Standings</a>
+        
         {/* <a href="#">field3</a>
         <a href="#">field4</a>
         <a href="#">field5</a> */}
@@ -115,6 +122,7 @@ class PrevStandings extends React.Component {
                     <div className="container">
                         <h1>Previous Standings</h1>
                         <h1>For Contest - {contestName}</h1>
+                        
 
                         {/* <div id="toolbar">
                             <select className="form-control">
@@ -138,6 +146,7 @@ class PrevStandings extends React.Component {
                             data-toolbar="#toolbar">
                             <thead>
                                 <tr>
+                                    <th data-field="serial" data-sortable="true">Rank</th>
                                     <th data-field="cf_handle" data-sortable="false">CF Handle</th>
                                     <th data-field="rank" data-sortable="true">Rank</th>
                                     <th data-field="oldRating" data-sortable="true">Old Rating</th>
@@ -145,7 +154,9 @@ class PrevStandings extends React.Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {usersData.map(user => (<tr id={user.cf_handle}>
+                               
+                                {usersData.map((user,index) => (<tr id={user.cf_handle}>
+                                   <td>{index+1}</td>
                                     <td><a href={'https://codeforces.com/profile/' + user.cf_handle} target="_blank" style={{color: "white"}}>{user.cf_handle}</a></td>
                                     <td>{user.rank}</td>
                                     <td>{user.oldRating}</td>

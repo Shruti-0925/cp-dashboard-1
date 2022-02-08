@@ -266,8 +266,8 @@ const otpEmail = nodemailer.createTransport({
 	requireTLS: true,
 	auth: {
 
-		user: "palpratiksha69@gmail.com",
-		pass: "Doiknowit?",
+		user: "",
+		pass: "",
 	},
 });
 
@@ -369,12 +369,25 @@ app.get("/contest-info/:contest_id", async (req, res) => {
 			newRating : '-',
 		}
 	]
+	function compare(a,b){
+		if(a.rank<b.rank){
+			return -1;
+		}
+		if(a.rank>b.rank){
+		return 1;
+		}
+		return 0;
+	}
+	
+	
 	if(id==='None')
 	{
 		return res.send({status: "Wrong Contest", data : dummy, contest_name : "None"});
 	}
 	const contest = await UserContests.findOne({ contest_id : id }).lean();
 	const contest_details = await Contests.findOne({contest_id : id}).lean();
+	contest.participants.sort(compare);
+	console.log(contest.participants)
 	if(!contest)
 	{
 		return res.send({status: "no users", data : dummy, contest_name : contest_details.contest_name});
