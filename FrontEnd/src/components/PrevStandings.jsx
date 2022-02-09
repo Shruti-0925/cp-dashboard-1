@@ -64,14 +64,14 @@ class PrevStandings extends React.Component {
                 <div>
                 
                   <nav>
+                <a href="../">LeaderBoard</a>
                   <a href="/PrevStandings">Contests Standings</a>
-        <a href="../">LeaderBoard</a>
        
       
         {/* <a href="#">field3</a>
         <a href="#">field4</a>
         <a href="#">field5</a> */}
-        <div class="animation start-home"></div>
+        <div class="animation start-about"></div>
     </nav>
               <div class = "content">
                     <select className="select-style"
@@ -91,15 +91,15 @@ class PrevStandings extends React.Component {
         {
             return (
                 <div>
-                       <nav>
-                       <a href="/PrevStandings">Contests Standings</a>
-        <a href="../">LeaderBoard</a>
+                      <nav>
+                <a href="../">LeaderBoard</a>
+                  <a href="/PrevStandings">Contests Standings</a>
        
-        
+      
         {/* <a href="#">field3</a>
         <a href="#">field4</a>
         <a href="#">field5</a> */}
-        <div class="animation start-home"></div>
+        <div class="animation start-about"></div>
     </nav>
                     <h1>Option to sahi se select karle</h1>
                     <Helmet><link type="text/css" rel="stylesheet" href="leaderboard.css" /></Helmet>
@@ -109,15 +109,15 @@ class PrevStandings extends React.Component {
         else {
             return (
                 <div className="all">
-                <nav>
-                <a href="/PrevStandings">Contests Standings</a>
-        <a href="../">LeaderBoard</a>
+          <nav>
+                <a href="../">LeaderBoard</a>
+                  <a href="/PrevStandings">Contests Standings</a>
        
-        
+      
         {/* <a href="#">field3</a>
         <a href="#">field4</a>
         <a href="#">field5</a> */}
-        <div class="animation start-home"></div>
+        <div class="animation start-about"></div>
     </nav>
                     <div className="container">
                         <h1>Previous Standings</h1>
