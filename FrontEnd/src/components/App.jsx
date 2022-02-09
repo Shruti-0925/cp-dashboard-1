@@ -3,6 +3,7 @@ import Login from "./Login";
 import Register from "./Register";
 import LeaderBoard from "./LeaderBoard";
 import PrevStandings from "./PrevStandings";
+import Admin from "./admin";
 import { Routes , Route } from "react-router-dom";
 
 import PrivateRoute from "./privateRoute.js";
@@ -15,6 +16,7 @@ function App() {
           <Route exact path='/prevstandings' element={<PrevStandings />}/>
           <Route exact path='/' element={<LeaderBoard />}/>
         </Route>
+        <Route exact path='/admin' element={<Admin />}/>
         <Route exact path="/login" element={<Login />}/>
         <Route exact path="/register" element={<Register />}/>
       </Routes>

@@ -87,7 +87,14 @@ async function make_api_call(cf_handle) {
 				}
 				number_of_solved_questions = [...new Set(all_attempted_questions)].length;
 				number_of_contests = responseTwo.data.result.length;
-				max_rating = responesThree.data.result[0].maxRating;
+				if(responesThree.data.result[0].maxRating !== undefined)
+				{
+					max_rating = responesThree.data.result[0].maxRating;
+				}
+				else
+				{
+					max_rating=0;
+				}
 			}))
 		}
 		catch (err) {
@@ -307,6 +314,91 @@ app.get("/get-contests", async (req, res) => {
 	res.send(data);
 });
 
+async function getContestDetails() {
+	let fetched_data = await axios.get("https://codeforces.com/api/contest.list?gym=false");
+	let data = fetched_data.data;
+	var contests = [];
+
+	for (var i = 0; i < data.result.length; i++) {
+		var id = data.result[i].id;
+		var name = data.result[i].name;
+		var startTime = data.result[i].startTimeSeconds;
+		var phase = data.result[i].phase;
+
+		if (name.length > 1 && startTime > 0 && phase !== "FINISHED") {
+			var item = {
+				contestId: parseInt(id),
+				name: name,
+				startTime: parseInt(startTime)
+			};
+
+			contests.push(item);
+		}
+	}
+
+	contests.sort(function (a, b) {
+		if (a.startTime > b.startTime) return -1;
+		if (a.startTime < b.startTime) return 1;
+		return 0;
+	});
+	let to_be_updated_contest_ids= [];
+	for(let i=0;i<contests.length;i++)
+	{
+		let contest_id=contests[i].contestId;
+		let contest_name=contests[i].name;
+		let startTime=contests[i].startTime;
+		let check = await Contests.findOne({contest_id}).lean();
+		if(check)
+		{
+			try {
+				const response = await Contests.create({
+					contest_id : contest_id,
+					contest_name : contest_name,
+					startTime : startTime
+				})
+				to_be_updated_contest_ids.push(contest_id);
+			} catch (error) {
+				console.log(contest_id);
+				console.log(error);
+			}
+		}
+	}
+	return to_be_updated_contest_ids;
+}
+app.get("/update_contests", async (req, res) => {
+	let contests = await getContestDetails();
+	if(contests.length ===0 )
+	{
+		res.send({status:'ok',message:'Already Up to date'});
+	}
+
+	// For updating user info
+	User.find({}).forEach(async function (user) {
+		let response = await axios.get("https://codeforces.com/api/user.info?handles="+user.cf_handle);
+		let response2 = await axios.get("https://codeforces.com/api/user.rating?handle="+user.cf_handle);
+		let check=false; 
+		if(response.data.result[0].maxRating !== undefined && response.data.result[0].maxRating>user.max_rating)
+		{
+			let max_rating = response.data.result[0].maxRating;
+			user.max_rating = max_rating;
+			check=true;
+		}
+		if(response2.data.result.length > user.num_of_contests)
+		{
+			user.num_of_contests= response2.data.result.length;
+			check=true;
+		}
+		if(check === true)
+		{
+			User.save(user);
+		}
+	});
+
+	for(var i=0;i<contests.length;i++)
+	{
+		var contest_id = contests[i];
+	}
+});
 // For backend use only - one time
 app.get("/all_contests", async (req, res) => {
 	let fetched_data = await axios.get("https://codeforces.com/api/contest.list?gym=false");
@@ -319,7 +411,7 @@ app.get("/all_contests", async (req, res) => {
 		var startTime = data.result[i].startTimeSeconds;
 		var phase = data.result[i].phase;
 
-		if (name.length > 1 && startTime > 0 && phase !== "BEFORE") {
+		if (name.length > 1 && startTime > 0 && phase === "FINISHED") {
 			var item = {
 				contestId: parseInt(id),
 				name: name,
