@@ -20,26 +20,26 @@ function Login() {
     const loginHandler = async (e) => {
         e.preventDefault();
         if (check) { pswd = password; } else { pswd = new_password; }
-         console.log("paswd")
-         console.log(pswd);
-         console.log("updating password")
-         const check1 = matchpswd();
-         console.log("status")
-         console.log(check);
-         console.log(check1);
-         if (check || check1) {            
-             console.log("login")
-             let details={
-                 cf_handle:cf_handle,
-                 password:pswd,
-             };
-             const result = await fetch("/api/login", {
-                 method: "POST",
-                 headers: {
-                     "Content-Type": "application/json",
-                 },
-                 body: JSON.stringify(details),
-             }).then((res) => res.json());
+        console.log("paswd")
+        console.log(pswd);
+        console.log("updating password")
+        const check1 = matchpswd();
+        console.log("status")
+        console.log(check);
+        console.log(check1);
+        if (check || check1) {
+            console.log("login")
+            let details = {
+                cf_handle: cf_handle,
+                password: pswd,
+            };
+            const result = await fetch("/api/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(details),
+            }).then((res) => res.json());
 
             if (result.status === "ok") {
                 console.log(result)
@@ -75,9 +75,9 @@ function Login() {
         console.log(inst_email);
         let details = {
             email: inst_email,
-            message: "OTP for resetting password is "+otp,
-            sub:"CP DashBoard: OTP Verification for Reset Password",
-            
+            message: "OTP for resetting password is " + otp,
+            sub: "CP DashBoard: OTP Verification for Reset Password",
+
         };
         fetch("/api/send_email", {
             method: "POST",
@@ -116,8 +116,8 @@ function Login() {
             let details = {
                 cf_handle: cf_handle,
                 new_pswd: new_password,
-            };            
-             fetch("/api/reset", {
+            };
+            fetch("/api/reset", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json;charset=utf-8",

@@ -11,16 +11,23 @@ function Admin() {
         if(user_name === 'CP-Dashboard' && password==='A@12345')
         {
             const result = await fetch("/update_contests", {
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(details),
             }).then((res) => res.json());
+            if(result.status === 'ok')
+            {
+                alert("Updated successfully");
+            }
+            else
+            {
+                alert("Some error is there");
+            }
         }
         else
         {
-
+            alert("Invalid Credentials");
         }
     }
 

@@ -87,13 +87,11 @@ async function make_api_call(cf_handle) {
 				}
 				number_of_solved_questions = [...new Set(all_attempted_questions)].length;
 				number_of_contests = responseTwo.data.result.length;
-				if(responesThree.data.result[0].maxRating !== undefined)
-				{
+				if (responesThree.data.result[0].maxRating !== undefined) {
 					max_rating = responesThree.data.result[0].maxRating;
 				}
-				else
-				{
-					max_rating=0;
+				else {
+					max_rating = 0;
 				}
 			}))
 		}
@@ -105,24 +103,9 @@ async function make_api_call(cf_handle) {
 	return { num_of_questions: number_of_solved_questions, num_of_contests: number_of_contests, max_rating: max_rating };
 }
 
-// Useless but helpful
-// app.get("/login", async (req, res) => {
-// 	const cursor = User.find().cursor();
-
-// 	for (let user = await cursor.next(); user != null; user = await cursor.next())
-// 	{
-// 		let result;
-// 		await make_api_call(user.cf_handle).then((response) => {
-// 			result=response;
-// 		});
-// 		console.log("IN route /login",result);
-// 	}
-//     res.render("login");
-// });
-
 app.post('/api/login', async (req, res) => {
-	const cf_handle=req.body.cf_handle;
-	const password=req.body.password;
+	const cf_handle = req.body.cf_handle;
+	const password = req.body.password;
 	const user = await User.findOne({ cf_handle }).lean()
 	if (!user) {
 		return res.json({ status: 'error', error: 'Invalid username/password' })
@@ -143,20 +126,20 @@ app.post('/api/login', async (req, res) => {
 
 
 })
-app.post('/api/reset', async(req,res)=>{
+app.post('/api/reset', async (req, res) => {
 	console.log("reset");
-	const cf_handle=req.body.cf_handle;
-	const new_pswd=req.body.new_pswd;
+	const cf_handle = req.body.cf_handle;
+	const new_pswd = req.body.new_pswd;
 	const hashpswd = await bcrypt.hash(new_pswd, 10);
-	User.updateOne({cf_handle}, 
-		{password:hashpswd}, function (err, docs) {
-		if (err){
-			console.log(err)
-		}
-		else{
-			console.log("Updated Docs : ", docs);
-		}
-	});
+	User.updateOne({ cf_handle },
+		{ password: hashpswd }, function (err, docs) {
+			if (err) {
+				console.log(err)
+			}
+			else {
+				console.log("Updated Docs : ", docs);
+			}
+		});
 	//const user = await User.findOne({ cf_handle }).lean()
 	//console.log(user.password);
 	//user.password=new_pswd;
@@ -165,10 +148,9 @@ app.post('/api/reset', async(req,res)=>{
 	//return res.json({ status: 'error', error: user.id });
 })
 app.post('/api/register', async (req, res) => {
-	// console.log(req.body)
 	const { cf_handle, cf_email, inst_email, password: plainTextPassword } = req.body
 	const user = await User.findOne({ cf_handle }).lean();
-	if(user){
+	if (user) {
 		return res.json({ status: 'error', error: 'CF Handle already in use' });
 	}
 
@@ -186,13 +168,12 @@ app.post('/api/register', async (req, res) => {
 		return res.json({ status: 'error', error: 'Invalid password' })
 	}
 
-	/* Will be uncommented later */
-	// if (plainTextPassword.length < 5) {
-	// 	return res.json({
-	// 		status: 'error',
-	// 		error: 'Password too small. Should be atleast 6 characters'
-	// 	})
-	// }
+	if (plainTextPassword.length < 5) {
+		return res.json({
+			status: 'error',
+			error: 'Password too small. Should be atleast 6 characters'
+		})
+	}
 
 	const password = await bcrypt.hash(plainTextPassword, 10);
 	let result;
@@ -227,7 +208,7 @@ app.post('/api/register', async (req, res) => {
 	for (var i = 0; i < contests_array.length; i++) {
 		const contest_id = contests_array[i].contestId;
 		const contest_name = contests_array[i].contestName;
-		const contest = await UserContests.findOne({ contest_id }).lean()
+		const contest = await UserContests.findOne({ contest_id : contest_id }).lean()
 		if (!contest) {
 			const participants = [{
 				cf_handle: cf_handle,
@@ -259,7 +240,7 @@ app.post('/api/register', async (req, res) => {
 				{ contest_id: contest_id },
 				{ $addToSet: { participants: participants } },
 			);
-			console.log("pushed",contest_id);
+			console.log("pushed", contest_id);
 		}
 	}
 	return res.json({ status: 'ok', token: '123' });
@@ -270,7 +251,7 @@ const otpEmail = nodemailer.createTransport({
 	port: 587,
 	secure: false,
 	requireTLS: true,
-	auth: {	
+	auth: {
 		user: "cp.dashboard.iitmandi@gmail.com",
 		pass: "A@123456",
 	},
@@ -286,13 +267,13 @@ otpEmail.verify((error) => {
 app.post("/api/send_email", async (req, res) => {
 	const message = req.body.message;
 	const email = req.body.email;
-	const sub=req.body.sub;
+	const sub = req.body.sub;
 	//const email=req.body.email;
 	const mail = {
-	  from: "cp.dashboard.iitmandi@gmail.com",
-	  to: email,
-	  subject: sub,
-	  html: `<p>${message}</p>`,
+		from: "cp.dashboard.iitmandi@gmail.com",
+		to: email,
+		subject: sub,
+		html: `<p>${message}</p>`,
 	};
 	otpEmail.sendMail(mail, (error) => {
 		if (error) {
@@ -310,7 +291,7 @@ app.get("/leaderboard", async (req, res) => {
 });
 
 app.get("/get-contests", async (req, res) => {
-	const data = await Contests.find({}).lean();
+	const data = await Contests.find({}).sort('-contest_id').lean();
 	res.send(data);
 });
 
@@ -325,7 +306,7 @@ async function getContestDetails() {
 		var startTime = data.result[i].startTimeSeconds;
 		var phase = data.result[i].phase;
 
-		if (name.length > 1 && startTime > 0 && phase !== "FINISHED") {
+		if (name.length > 1 && startTime > 0 && phase === "FINISHED") {
 			var item = {
 				contestId: parseInt(id),
 				name: name,
@@ -341,20 +322,19 @@ async function getContestDetails() {
 		if (a.startTime < b.startTime) return 1;
 		return 0;
 	});
-	let to_be_updated_contest_ids= [];
-	for(let i=0;i<contests.length;i++)
-	{
-		let contest_id=contests[i].contestId;
-		let contest_name=contests[i].name;
-		let startTime=contests[i].startTime;
-		let check = await Contests.findOne({contest_id}).lean();
-		if(check)
-		{
+	let to_be_updated_contest_ids = [];
+	console.log(contests.length);
+	for (let i = 0; i < contests.length; i++) {
+		let contest_id = contests[i].contestId;
+		let contest_name = contests[i].name;
+		let startTime = contests[i].startTime;
+		let check = await Contests.findOne({ contest_id : 1634 }).lean();
+		if (!check) {
 			try {
 				const response = await Contests.create({
-					contest_id : contest_id,
-					contest_name : contest_name,
-					startTime : startTime
+					contest_id: contest_id,
+					contest_name: contest_name,
+					startTime: startTime
 				})
 				to_be_updated_contest_ids.push(contest_id);
 			} catch (error) {
@@ -365,39 +345,100 @@ async function getContestDetails() {
 	}
 	return to_be_updated_contest_ids;
 }
-app.get("/update_contests", async (req, res) => {
+app.post("/update_contests", async (req, res) => {
 	let contests = await getContestDetails();
-	if(contests.length ===0 )
-	{
-		res.send({status:'ok',message:'Already Up to date'});
+	if (contests.length === 0) {
+		res.json({ status: 'ok', message: 'Already Up to date' });
 	}
-
 	// For updating user info
-	User.find({}).forEach(async function (user) {
-		let response = await axios.get("https://codeforces.com/api/user.info?handles="+user.cf_handle);
-		let response2 = await axios.get("https://codeforces.com/api/user.rating?handle="+user.cf_handle);
-		let check=false; 
-		if(response.data.result[0].maxRating !== undefined && response.data.result[0].maxRating>user.max_rating)
-		{
-			let max_rating = response.data.result[0].maxRating;
-			user.max_rating = max_rating;
-			check=true;
-		}
-		if(response2.data.result.length > user.num_of_contests)
-		{
-			user.num_of_contests= response2.data.result.length;
-			check=true;
-		}
-		if(check === true)
-		{
-			User.save(user);
-		}
-	});
+	let cursor = User.find().cursor();
+	for (let user = await cursor.next(); user != null; user = await cursor.next()) {
+		try {
+			console.log(user.cf_handle);
+			const response = await axios.get("https://codeforces.com/api/user.info?handles=" + user.cf_handle);
+			const response2 = await axios.get("https://codeforces.com/api/user.rating?handle=" + user.cf_handle);
+			// console.log(response.data.result[0].maxRating)
+			// console.log(response2.data.result.length)
+			let check = false;
+			if (response.data.result[0].maxRating !== undefined && response.data.result[0].maxRating > user.max_rating) {
+				let max_rating = response.data.result[0].maxRating;
+				user.max_rating = max_rating;
+				check = true;
+			}
+			if (response2.data.result.length >= user.num_of_contests) {
+				let all_user_contests = response2.data.result;
+				user.num_of_contests = all_user_contests.length;
+				check = true;
+				/* Code for updating contests */
+				for (var i = 0; i < all_user_contests.length; i++) {
+					const checking_contest_id = all_user_contests[i].contestId;
 
-	for(var i=0;i<contests.length;i++)
-	{
-		var contest_id = contests[i];
-	}
+					var id= contests.indexOf(checking_contest_id);
+					if (id !== -1) {
+						console.log("Checking ",checking_contest_id);
+						const contest = await UserContests.find({ contest_id : checking_contest_id }).lean();
+						let contest_name = all_user_contests[i].contestName;
+						let contest_id = checking_contest_id;
+						if (contest.length === 0) {
+							const participants = [{
+								cf_handle: user.cf_handle,
+								rank: all_user_contests[i].rank,
+								oldRating: all_user_contests[i].oldRating,
+								newRating: all_user_contests[i].newRating,
+							}]
+							try {
+								const response = await UserContests.create({
+									contest_id,
+									contest_name,
+									participants
+								})
+								console.log("created", contest_id);
+							} catch (error) {
+								res.json({ status: 'error' });
+							}
+						}
+						else {
+							const participants = {
+								cf_handle: user.cf_handle,
+								rank: all_user_contests[i].rank,
+								oldRating: all_user_contests[i].oldRating,
+								newRating: all_user_contests[i].newRating,
+							}
+
+							let details = await UserContests.findOne({ contest_id : checking_contest_id }).select('participants -_id');
+							var tell=false;
+							for(var index=0;index<details.participants.length;index++)
+							{
+								if(details.participants[index].cf_handle === user.cf_handle)
+								{
+									tell=true;
+									break;
+								}
+							}
+							if(tell === false)
+							{
+								await UserContests.findOneAndUpdate(
+									{ contest_id: contest_id },
+									{ $addToSet: { participants: participants } },
+								);
+								console.log("pushed to", contest_id);
+							}
+						}
+					}
+				}
+			}
+			if (check === true) {
+				await User.findOneAndUpdate({ cf_handle: user.cf_handle }, {
+					num_of_contests: user.num_of_contests,
+					max_rating: user.max_rating
+				});
+			}
+		} catch (error) {
+			res.json({ status: 'error' });
+		}
+	};
+
+	res.json({ status: 'ok'});
 });
 // For backend use only - one time
 app.get("/all_contests", async (req, res) => {
@@ -453,36 +494,34 @@ app.get("/contest-info/:contest_id", async (req, res) => {
 	const id = req.params.contest_id;
 	const dummy = [
 		{
-			cf_handle : '-',
-			rank : '-',
-			oldRating : '-',
-			newRating : '-',
+			cf_handle: '-',
+			rank: '-',
+			oldRating: '-',
+			newRating: '-',
 		}
 	]
-	function compare(a,b){
-		if(a.rank<b.rank){
+	function compare(a, b) {
+		if (a.rank < b.rank) {
 			return -1;
 		}
-		if(a.rank>b.rank){
-		return 1;
+		if (a.rank > b.rank) {
+			return 1;
 		}
 		return 0;
 	}
-	
-	
-	if(id==='None')
-	{
-		return res.send({status: "Wrong Contest", data : dummy, contest_name : "None"});
+
+
+	if (id === 'None') {
+		return res.send({ status: "Wrong Contest", data: dummy, contest_name: "None" });
 	}
-	const contest = await UserContests.findOne({ contest_id : id }).lean();
-	const contest_details = await Contests.findOne({contest_id : id}).lean();
+	const contest = await UserContests.findOne({ contest_id: id }).lean();
+	const contest_details = await Contests.findOne({ contest_id: id }).lean();
 	contest.participants.sort(compare);
-	console.log(contest.participants)
-	if(!contest)
-	{
-		return res.send({status: "no users", data : dummy, contest_name : contest_details.contest_name});
+	// console.log(contest.participants)
+	if (!contest) {
+		return res.send({ status: "no users", data: dummy, contest_name: contest_details.contest_name });
 	}
-	return res.send({status:"ok" , data : contest.participants, contest_name : contest_details.contest_name});
+	return res.send({ status: "ok", data: contest.participants, contest_name: contest_details.contest_name });
 });
 
 // Hosting it
