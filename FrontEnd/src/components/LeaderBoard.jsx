@@ -32,7 +32,6 @@ class LeaderBoard extends React.Component {
         else {
 
             return (
-                
                 <div className="all">
                  <nav>
         <a href="">LeaderBoard</a>
@@ -41,9 +40,10 @@ class LeaderBoard extends React.Component {
         {/* <a href="#">field3</a>
         <a href="#">field4</a>
         <a href="#">field5</a> */}
+        <a className="logout-button" href="/login">Logout</a>
         <div class="animation start-home"></div>
     </nav>
-      
+            
                     <div className="container">
                         <h1>LEADERBOARD</h1>
 

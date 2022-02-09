@@ -66,6 +66,7 @@ class PrevStandings extends React.Component {
                   <nav>
                 <a href="../">LeaderBoard</a>
                   <a href="/PrevStandings">Contests Standings</a>
+                  <a className="logout-button" href="/login">Logout</a>
        
       
         {/* <a href="#">field3</a>
@@ -94,6 +95,7 @@ class PrevStandings extends React.Component {
                       <nav>
                 <a href="../">LeaderBoard</a>
                   <a href="/PrevStandings">Contests Standings</a>
+                  <a className="logout-button" href="/login">Logout</a>
        
       
         {/* <a href="#">field3</a>
@@ -112,6 +114,7 @@ class PrevStandings extends React.Component {
           <nav>
                 <a href="../">LeaderBoard</a>
                   <a href="/PrevStandings">Contests Standings</a>
+                  <a className="logout-button" href="/login">Logout</a>
        
       
         {/* <a href="#">field3</a>
