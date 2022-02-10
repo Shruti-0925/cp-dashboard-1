@@ -446,54 +446,6 @@ app.post("/update_contests", async (req, res) => {
 	res.json({ status: 'ok' });
 });
 // For backend use only - one time
-app.get("/all_contests", async (req, res) => {
-	let fetched_data = await axios.get("https://codeforces.com/api/contest.list?gym=false");
-	let data = fetched_data.data;
-	var contests = [];
-
-	for (var i = 0; i < data.result.length; i++) {
-		var id = data.result[i].id;
-		var name = data.result[i].name;
-		var startTime = data.result[i].startTimeSeconds;
-		var phase = data.result[i].phase;
-
-		if (name.length > 1 && startTime > 0 && phase === "FINISHED") {
-			var item = {
-				contestId: parseInt(id),
-				name: name,
-				startTime: parseInt(startTime)
-			};
-
-			contests.push(item);
-		}
-	}
-
-	contests.sort(function (a, b) {
-		if (a.startTime > b.startTime) return -1;
-		if (a.startTime < b.startTime) return 1;
-		return 0;
-	});
-	// Worked only for single time
-	// for(let i=0;i<contests.length;i++)
-	// {
-	// 	let contest_id=contests[i].contestId;
-	// 	let contest_name=contests[i].name;
-	// 	let startTime=contests[i].startTime;
-	// 	try {
-	// 		const response = await Contests.create({
-	// 			contest_id : contest_id,
-	// 			contest_name : contest_name,
-	// 			startTime : startTime
-	// 		})
-	// 	} catch (error) {
-	// 		console.log(contest_id);
-	// 		console.log(error);
-	// 		break;
-	// 	}
-	// }
-	console.log(contests.length);
-	res.send(contests);
-});
 
 app.get("/contest-info/:contest_id", async (req, res) => {
 	const id = req.params.contest_id;
@@ -528,6 +480,34 @@ app.get("/contest-info/:contest_id", async (req, res) => {
 	contest.participants.sort(compare);
 	return res.send({ status: "ok", data: contest.participants, contest_name: contest_details.contest_name });
 });
+async function fetchDetails() {
+	const cursor = User.find().cursor();
+	for (let user = await cursor.next(); user != null; user = await cursor.next())
+	{
+		try {
+			let all_attempted_questions = [];
+			const req = await axios.get("https://codeforces.com/api/user.status?handle=" + user.cf_handle);
+			for (let i = 0; i < req.data.result.length; i++) {
+				if (req.data.result[i].verdict === 'OK') {
+					let str = String(req.data.result[i].problem.contestId) + '-' + req.data.result[i].problem.index;
+					all_attempted_questions.push(str);
+				}
+			}
+			let number_of_solved_questions = [...new Set(all_attempted_questions)].length;
+			if(user.num_of_questions < number_of_solved_questions)
+			{
+				await User.findOneAndUpdate({ cf_handle: user.cf_handle }, {
+					num_of_questions : number_of_solved_questions,
+				});
+			}
+		} catch (error) {
+			console.log(error)
+		}
+	}
+}
+
+fetchDetails();
+setInterval(fetchDetails, 1000 * 60*60);
 
 // Hosting it
 var port = process.env.PORT || 5000;
