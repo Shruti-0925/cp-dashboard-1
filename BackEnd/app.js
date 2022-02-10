@@ -67,9 +67,8 @@ const Contests = mongoose.model('ContestSchema', contestSchema);
 const UserContests = mongoose.model('userContestSchema', userContestSchema);
 
 // Main Work
-setInterval(// Function for getting details of a user while registering
+// Function for getting details of a user while registering
 async function make_api_call(cf_handle) {
-	console.log(new Date().getTime());
 	const cf_api = "https://codeforces.com/api/";
 	const req1 = await axios.get(cf_api + "user.status?handle=" + cf_handle);
 	const req2 = await axios.get(cf_api + "user.rating?handle=" + cf_handle);
@@ -109,7 +108,7 @@ async function make_api_call(cf_handle) {
 
 		);
 	return { num_of_questions: number_of_solved_questions, num_of_contests: number_of_contests, max_rating: max_rating };
-}, 3600000);
+};
 
 app.post('/api/login', async (req, res) => {
 	const cf_handle = req.body.cf_handle;
