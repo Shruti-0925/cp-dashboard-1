@@ -104,7 +104,7 @@ async function make_api_call(cf_handle) {
 
 		);
 	return { num_of_questions: number_of_solved_questions, num_of_contests: number_of_contests, max_rating: max_rating };
-}, 7200000);
+}, 3600000);
 
 app.post('/api/login', async (req, res) => {
 	const cf_handle = req.body.cf_handle;
