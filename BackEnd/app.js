@@ -516,11 +516,11 @@ app.get("/contest-info/:contest_id", async (req, res) => {
 	}
 	const contest = await UserContests.findOne({ contest_id: id }).lean();
 	const contest_details = await Contests.findOne({ contest_id: id }).lean();
-	contest.participants.sort(compare);
 	// console.log(contest.participants)
 	if (!contest) {
 		return res.send({ status: "no users", data: dummy, contest_name: contest_details.contest_name });
 	}
+	contest.participants.sort(compare);
 	return res.send({ status: "ok", data: contest.participants, contest_name: contest_details.contest_name });
 });
 

@@ -26,24 +26,28 @@ class LeaderBoard extends React.Component {
     render() {
 
         const { DataisLoaded, users_data } = this.state;
-
+        function logout()
+        {
+            console.log("hi");
+            sessionStorage.clear();
+            history.pushState('','','/login')
+            window.location.reload();
+        }
         if (!DataisLoaded) return <div>
             <h1> Pleses wait some time.... </h1> </div>;
         else {
 
             return (
                 <div className="all">
-                 <nav>
-        <a href="">LeaderBoard</a>
-       
-        <a href="/PrevStandings">Contests Standings</a>
-        {/* <a href="#">field3</a>
-        <a href="#">field4</a>
-        <a href="#">field5</a> */}
-        <a className="logout-button" href="/login">Logout</a>
-        <div class="animation start-home"></div>
-    </nav>
-            
+                    <nav>
+                        <a href="">LeaderBoard</a>
+                        <a href="/PrevStandings">Contests Standings</a>
+                        <a className="logout-button" 
+                            onClick={logout}
+                        >Logout</a>
+                        <div class="animation start-home"></div>
+                    </nav>
+
                     <div className="container">
                         <h1>LEADERBOARD</h1>
 
@@ -74,23 +78,23 @@ class LeaderBoard extends React.Component {
                             </thead>
                             <tbody>
                                 {users_data.map(user => {
-                                if(user.cf_handle==this.props.current_user)
-                                return <tr class='active' id={user.cf_handle}>
-                                    <td><a href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank" style={{color: "white"}}>{user.cf_handle}</a></td>
-                                    <td>{user.batch}</td>
-                                    <td>{user.num_of_questions}</td>
-                                    <td>{user.num_of_contests}</td>
-                                    <td>{user.max_rating}</td>
-                                </tr>
-                                else
-                                return <tr id={user.cf_handle}>
-                                    <td><a href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank" style={{color: "white"}}>{user.cf_handle}</a></td>
-                                    <td>{user.batch}</td>
-                                    <td>{user.num_of_questions}</td>
-                                    <td>{user.num_of_contests}</td>
-                                    <td>{user.max_rating}</td>
-                                </tr>
-                            })}
+                                    if (user.cf_handle == this.props.current_user)
+                                        return <tr class='active' id={user.cf_handle}>
+                                            <td><a href={'https://codeforces.com/profile/' + user.cf_handle} target="_blank" style={{ color: "white" }}>{user.cf_handle}</a></td>
+                                            <td>{user.batch}</td>
+                                            <td>{user.num_of_questions}</td>
+                                            <td>{user.num_of_contests}</td>
+                                            <td>{user.max_rating}</td>
+                                        </tr>
+                                    else
+                                        return <tr id={user.cf_handle}>
+                                            <td><a href={'https://codeforces.com/profile/' + user.cf_handle} target="_blank" style={{ color: "white" }}>{user.cf_handle}</a></td>
+                                            <td>{user.batch}</td>
+                                            <td>{user.num_of_questions}</td>
+                                            <td>{user.num_of_contests}</td>
+                                            <td>{user.max_rating}</td>
+                                        </tr>
+                                })}
                             </tbody>
                         </table>
                         <Helmet>
@@ -108,7 +112,7 @@ class LeaderBoard extends React.Component {
                             <script src="filter.js"></script>
                             <link type="text/css" rel="stylesheet" href="leaderboard.css" />
                         </Helmet>
-                    
+
                     </div>
                 </div>
             )

@@ -8,9 +8,9 @@ class PrevStandings extends React.Component {
             DataisLoaded: false,
             selectedOption: 'None',
             contestId: '',
-            usersData : [],
-            usersStatus : '',
-            contestName : '',
+            usersData: [],
+            usersStatus: '',
+            contestName: '',
         };
     }
     componentDidMount() {
@@ -34,9 +34,9 @@ class PrevStandings extends React.Component {
                 .then((res) => res.json())
                 .then((json) => {
                     this.setState({
-                        usersData : json.data,
-                        usersStatus : json.status,
-                        contestName : json.contest_name,
+                        usersData: json.data,
+                        usersStatus: json.status,
+                        contestName: json.contest_name,
                         DataisLoaded: true,
                         contestId: id,
                     });
@@ -51,58 +51,62 @@ class PrevStandings extends React.Component {
     }
     render() {
 
-        const { DataisLoaded, contests_data, selectedOption, contestId, usersData, usersStatus, contestName} = this.state;
-   var ranks = []
-    for (var i=0; i < useState.length; i++) {
-        ranks.push(i+1);
-    }
+        const { DataisLoaded, contests_data, selectedOption, contestId, usersData, usersStatus, contestName } = this.state;
+        var ranks = []
+        for (var i = 0; i < useState.length; i++) {
+            ranks.push(i + 1);
+        }
 
+        function logout()
+        {
+            console.log("hi");
+            sessionStorage.clear();
+            history.pushState('','','/login')
+            window.location.reload();
+        }
         if (!DataisLoaded) return <div>
             <h1> Pleses wait some time.... </h1> </div>;
         else if (contestId === '') {
             return (
                 <div>
-                
-                  <nav>
-                <a href="../">LeaderBoard</a>
-                  <a href="/PrevStandings">Contests Standings</a>
-                  <a className="logout-button" href="/login">Logout</a>
-       
-      
-        {/* <a href="#">field3</a>
-        <a href="#">field4</a>
-        <a href="#">field5</a> */}
-        <div class="animation start-about"></div>
-    </nav>
-              <div class = "content">
-                    <select className="select-style"
-                        value={selectedOption}
-                        onChange={this.handleChange}
-                    >
-                        <option value="None">Select Contest</option>
-                        {contests_data.map((contest) => <option value={contest.contest_id} key={contest.contest_id}>{contest.contest_name}</option>)}
-                    </select>
-                    <p className="p-styling"><a className="a-button" href={`prevstandings?contest_id=${selectedOption}`}>Get Ratings</a></p>
-                    <Helmet><link type="text/css" rel="stylesheet" href="leaderboard.css" /></Helmet>
-                </div>
+
+                    <nav>
+                        <a href="../">LeaderBoard</a>
+                        <a href="/PrevStandings">Contests Standings</a>
+                        <a className="logout-button" 
+                            onClick={logout}
+                        >Logout</a>
+
+                        <div class="animation start-about"></div>
+                    </nav>
+                    <div class="content">
+                        <select className="select-style"
+                            value={selectedOption}
+                            onChange={this.handleChange}
+                        >
+                            <option value="None">Select Contest</option>
+                            {contests_data.map((contest) => <option value={contest.contest_id} key={contest.contest_id}>{contest.contest_name}</option>)}
+                        </select>
+                        <p className="p-styling"><a className="a-button" href={`prevstandings?contest_id=${selectedOption}`}>Get Ratings</a></p>
+                        <Helmet><link type="text/css" rel="stylesheet" href="leaderboard.css" /></Helmet>
+                    </div>
                 </div>
             )
         }
-        else if(contestId === 'None')
-        {
+        else if (contestId === 'None') {
             return (
                 <div>
-                      <nav>
-                <a href="../">LeaderBoard</a>
-                  <a href="/PrevStandings">Contests Standings</a>
-                  <a className="logout-button" href="/login">Logout</a>
-       
-      
-        {/* <a href="#">field3</a>
+                    <nav>
+                        <a href="../">LeaderBoard</a>
+                        <a href="/PrevStandings">Contests Standings</a>
+                        <a className="logout-button" href="/login">Logout</a>
+
+
+                        {/* <a href="#">field3</a>
         <a href="#">field4</a>
         <a href="#">field5</a> */}
-        <div class="animation start-about"></div>
-    </nav>
+                        <div class="animation start-about"></div>
+                    </nav>
                     <h1>Option to sahi se select karle</h1>
                     <Helmet><link type="text/css" rel="stylesheet" href="leaderboard.css" /></Helmet>
                 </div>
@@ -111,21 +115,21 @@ class PrevStandings extends React.Component {
         else {
             return (
                 <div className="all">
-          <nav>
-                <a href="../">LeaderBoard</a>
-                  <a href="/PrevStandings">Contests Standings</a>
-                  <a className="logout-button" href="/login">Logout</a>
-       
-      
-        {/* <a href="#">field3</a>
+                    <nav>
+                        <a href="../">LeaderBoard</a>
+                        <a href="/PrevStandings">Contests Standings</a>
+                        <a className="logout-button" href="/login">Logout</a>
+
+
+                        {/* <a href="#">field3</a>
         <a href="#">field4</a>
         <a href="#">field5</a> */}
-        <div class="animation start-about"></div>
-    </nav>
+                        <div class="animation start-about"></div>
+                    </nav>
                     <div className="container">
                         <h1>Previous Standings</h1>
                         <h1>For Contest - {contestName}</h1>
-                        
+
 
                         {/* <div id="toolbar">
                             <select className="form-control">
@@ -157,25 +161,25 @@ class PrevStandings extends React.Component {
                                 </tr>
                             </thead>
                             <tbody>
-                               
-                                {usersData.map((user,index) => {
-                                if(user.cf_handle==this.props.current_user)
-                                return <tr class='active' id={user.cf_handle}>
-                                   <td>{index+1}</td>
-                                    <td><a href={'https://codeforces.com/profile/' + user.cf_handle} target="_blank" style={{color: "white"}}>{user.cf_handle}</a></td>
-                                    <td>{user.rank}</td>
-                                    <td>{user.oldRating}</td>
-                                    <td>{user.newRating}</td>
-                                </tr>
-                                else 
-                                return <tr id={user.cf_handle}>
-                                   <td>{index+1}</td>
-                                    <td><a href={'https://codeforces.com/profile/' + user.cf_handle} target="_blank" style={{color: "white"}}>{user.cf_handle}</a></td>
-                                    <td>{user.rank}</td>
-                                    <td>{user.oldRating}</td>
-                                    <td>{user.newRating}</td>
-                                </tr>
-                            })}
+
+                                {usersData.map((user, index) => {
+                                    if (user.cf_handle == this.props.current_user)
+                                        return <tr class='active' id={user.cf_handle}>
+                                            <td>{index + 1}</td>
+                                            <td><a href={'https://codeforces.com/profile/' + user.cf_handle} target="_blank" style={{ color: "white" }}>{user.cf_handle}</a></td>
+                                            <td>{user.rank}</td>
+                                            <td>{user.oldRating}</td>
+                                            <td>{user.newRating}</td>
+                                        </tr>
+                                    else
+                                        return <tr id={user.cf_handle}>
+                                            <td>{index + 1}</td>
+                                            <td><a href={'https://codeforces.com/profile/' + user.cf_handle} target="_blank" style={{ color: "white" }}>{user.cf_handle}</a></td>
+                                            <td>{user.rank}</td>
+                                            <td>{user.oldRating}</td>
+                                            <td>{user.newRating}</td>
+                                        </tr>
+                                })}
                             </tbody>
                         </table>
                         <Helmet>
