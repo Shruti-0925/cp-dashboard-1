@@ -45,6 +45,7 @@ function Login() {
                 console.log(result)
                 var token = result.token;
                 sessionStorage.setItem("authToken", token);
+                sessionStorage.setItem("userName",cf_handle);
                 console.log(history);
                 history.pushState({ urlPath: '/login' }, '', "/");
                 window.location.reload();
@@ -140,6 +141,8 @@ function Login() {
                 src="https://iitmandi.ac.in/institute/images/iitmandi_logo.png"
                 alt="avatar_img"
             />
+            <br></br>
+            <br></br>
             <form onSubmit={loginHandler}>
                 {error && <span className="error-message">{error}</span>}
                 {islogin ? <div className="input-group">
@@ -227,23 +230,23 @@ function Login() {
                     >
                         Update Password
                     </button> : null}
-                <br /><br />
+                <br />
                 {islogin ?
-                    <button
+                    <p
                         onClick={fpswd}
-                        id="login"
+                        id="fgpsd"
                     >
                         Forgot Password?
-                    </button> : null}<br /><br />
+                    </p> : null}<br />
                 {islogin ? <button
                     type="submit"
                     id="login"
                 >
                     Login
                 </button> : null}
-                <br />
+                <br /> 
                 {islogin ? <span>
-                    Don't have account? <Link to="/register">Register</Link>
+                    Don't have account? <Link className="lreg" to="/register">Register</Link>
                 </span> : null}
             </form>
             <ul class="box-area">
@@ -257,5 +260,5 @@ function Login() {
         </div>
     );
 }
-
+export const userlogged=sessionStorage.getItem("userName");
 export default Login;

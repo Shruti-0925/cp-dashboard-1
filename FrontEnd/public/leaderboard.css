@@ -271,6 +271,7 @@ left: 470;
     background-color: #B4B4B4;
 }
 
+
 /*css for prevStandings */
 .select-style{
     background-color: #d6c9c9b0;
@@ -301,3 +302,9 @@ left: 470;
     margin-top:5%;
     margin-left:7.9%;
 }
+
+
+.active{
+    background-color: #5c7b93;
+}
+

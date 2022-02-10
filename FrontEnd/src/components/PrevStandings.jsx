@@ -158,13 +158,24 @@ class PrevStandings extends React.Component {
                             </thead>
                             <tbody>
                                
-                                {usersData.map((user,index) => (<tr id={user.cf_handle}>
+                                {usersData.map((user,index) => {
+                                if(user.cf_handle==this.props.current_user)
+                                return <tr class='active' id={user.cf_handle}>
                                    <td>{index+1}</td>
                                     <td><a href={'https://codeforces.com/profile/' + user.cf_handle} target="_blank" style={{color: "white"}}>{user.cf_handle}</a></td>
                                     <td>{user.rank}</td>
                                     <td>{user.oldRating}</td>
                                     <td>{user.newRating}</td>
-                                </tr>))}
+                                </tr>
+                                else 
+                                return <tr id={user.cf_handle}>
+                                   <td>{index+1}</td>
+                                    <td><a href={'https://codeforces.com/profile/' + user.cf_handle} target="_blank" style={{color: "white"}}>{user.cf_handle}</a></td>
+                                    <td>{user.rank}</td>
+                                    <td>{user.oldRating}</td>
+                                    <td>{user.newRating}</td>
+                                </tr>
+                            })}
                             </tbody>
                         </table>
                         <Helmet>

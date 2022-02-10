@@ -73,13 +73,24 @@ class LeaderBoard extends React.Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {users_data.map(user => (<tr id={user.cf_handle}>
+                                {users_data.map(user => {
+                                if(user.cf_handle==this.props.current_user)
+                                return <tr class='active' id={user.cf_handle}>
                                     <td><a href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank" style={{color: "white"}}>{user.cf_handle}</a></td>
                                     <td>{user.batch}</td>
                                     <td>{user.num_of_questions}</td>
                                     <td>{user.num_of_contests}</td>
                                     <td>{user.max_rating}</td>
-                                </tr>))}
+                                </tr>
+                                else
+                                return <tr id={user.cf_handle}>
+                                    <td><a href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank" style={{color: "white"}}>{user.cf_handle}</a></td>
+                                    <td>{user.batch}</td>
+                                    <td>{user.num_of_questions}</td>
+                                    <td>{user.num_of_contests}</td>
+                                    <td>{user.max_rating}</td>
+                                </tr>
+                            })}
                             </tbody>
                         </table>
                         <Helmet>
