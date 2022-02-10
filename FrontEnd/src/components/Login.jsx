@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet";
 var otp = '';
 var check = true;
 var pswd = '';
+
 function Login() {
     const [isMouseover, setMouseover] = useState(false);
     const [cf_handle, setCFHandle] = useState("");
@@ -17,6 +18,11 @@ function Login() {
     const [ismail, setIsmail] = useState(false);
     const [isotp, setIsotp] = useState(false);
     const [isnewpwd, setIsnewpwd] = useState(false);
+    const loggined = sessionStorage.getItem("authToken");
+    if(loggined)
+    {
+        return <Navigate to="/"></Navigate>
+    }
     const loginHandler = async (e) => {
         e.preventDefault();
         if (check) { pswd = password; } else { pswd = new_password; }

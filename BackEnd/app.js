@@ -7,11 +7,16 @@ const bcrypt = require('bcrypt');
 const mongoose = require("mongoose");
 const axios = require('axios');
 const nodemailer = require("nodemailer");
-const { Timestamp } = require("mongodb");
 
 // Connecting with database
-const url = "mongodb+srv://cp-user:12345@cluster.ye5s9.mongodb.net/CP-Dashboard?retryWrites=true&w=majority"
-mongoose.connect(String(url), { useNewUrlParser: true, useUnifiedTopology: true });
+const url = "mongodb+srv://cp-user:12345@cluster.ye5s9.mongodb.net/CP-Dashboard?retryWrites=true&w=majority";
+(async () => {
+	try {
+		await mongoose.connect(String(url), { useNewUrlParser: true, useUnifiedTopology: true });
+	} catch (err) {
+		console.log('error: ' + err)
+	}
+})()
 
 // Cofiguring app
 app.set("views", __dirname + "/views");
@@ -211,7 +216,7 @@ app.post('/api/register', async (req, res) => {
 	for (var i = 0; i < contests_array.length; i++) {
 		const contest_id = contests_array[i].contestId;
 		const contest_name = contests_array[i].contestName;
-		const contest = await UserContests.findOne({ contest_id : contest_id }).lean()
+		const contest = await UserContests.findOne({ contest_id: contest_id }).lean()
 		if (!contest) {
 			const participants = [{
 				cf_handle: cf_handle,
@@ -331,7 +336,7 @@ async function getContestDetails() {
 		let contest_id = contests[i].contestId;
 		let contest_name = contests[i].name;
 		let startTime = contests[i].startTime;
-		let check = await Contests.findOne({ contest_id : 1634 }).lean();
+		let check = await Contests.findOne({ contest_id: 1634 }).lean();
 		if (!check) {
 			try {
 				const response = await Contests.create({
@@ -376,10 +381,10 @@ app.post("/update_contests", async (req, res) => {
 				for (var i = 0; i < all_user_contests.length; i++) {
 					const checking_contest_id = all_user_contests[i].contestId;
 
-					var id= contests.indexOf(checking_contest_id);
+					var id = contests.indexOf(checking_contest_id);
 					if (id !== -1) {
-						console.log("Checking ",checking_contest_id);
-						const contest = await UserContests.find({ contest_id : checking_contest_id }).lean();
+						console.log("Checking ", checking_contest_id);
+						const contest = await UserContests.find({ contest_id: checking_contest_id }).lean();
 						let contest_name = all_user_contests[i].contestName;
 						let contest_id = checking_contest_id;
 						if (contest.length === 0) {
@@ -408,18 +413,15 @@ app.post("/update_contests", async (req, res) => {
 								newRating: all_user_contests[i].newRating,
 							}
 
-							let details = await UserContests.findOne({ contest_id : checking_contest_id }).select('participants -_id');
-							var tell=false;
-							for(var index=0;index<details.participants.length;index++)
-							{
-								if(details.participants[index].cf_handle === user.cf_handle)
-								{
-									tell=true;
+							let details = await UserContests.findOne({ contest_id: checking_contest_id }).select('participants -_id');
+							var tell = false;
+							for (var index = 0; index < details.participants.length; index++) {
+								if (details.participants[index].cf_handle === user.cf_handle) {
+									tell = true;
 									break;
 								}
 							}
-							if(tell === false)
-							{
+							if (tell === false) {
 								await UserContests.findOneAndUpdate(
 									{ contest_id: contest_id },
 									{ $addToSet: { participants: participants } },
@@ -441,7 +443,7 @@ app.post("/update_contests", async (req, res) => {
 		}
 	};
 
-	res.json({ status: 'ok'});
+	res.json({ status: 'ok' });
 });
 // For backend use only - one time
 app.get("/all_contests", async (req, res) => {

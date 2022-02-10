@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet";
+import { TailSpin } from  'react-loader-spinner'
 class LeaderBoard extends React.Component {
     constructor(props) {
         super(props);
@@ -28,13 +29,23 @@ class LeaderBoard extends React.Component {
         const { DataisLoaded, users_data } = this.state;
         function logout()
         {
-            console.log("hi");
             sessionStorage.clear();
             history.pushState('','','/login')
             window.location.reload();
         }
-        if (!DataisLoaded) return <div>
-            <h1> Pleses wait some time.... </h1> </div>;
+        if (!DataisLoaded)
+        {
+            return(
+                <div style={{marginTop:'45vh',marginLeft:'45vw'}}>
+                    <TailSpin
+                        heigth="10vh"
+                        width="10vw"
+                        color='grey'
+                        ariaLabel='loading'
+                    />
+                </div>
+            )
+        }
         else {
 
             return (
@@ -48,9 +59,7 @@ class LeaderBoard extends React.Component {
                         <div class="animation start-home"></div>
                     </nav>
 
-                    <div className="container">
-                        <h1>LEADERBOARD</h1>
-
+                    <div className="container animate-bottom">
                         <div id="toolbar">
                             <select className="form-control">
                                 <option value="">All Batches</option>

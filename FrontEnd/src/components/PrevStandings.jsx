@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet";
+import { TailSpin } from  'react-loader-spinner'
 class PrevStandings extends React.Component {
     constructor(props) {
         super(props);
@@ -64,8 +65,19 @@ class PrevStandings extends React.Component {
             history.pushState('','','/login')
             window.location.reload();
         }
-        if (!DataisLoaded) return <div>
-            <h1> Pleses wait some time.... </h1> </div>;
+        if (!DataisLoaded)
+        {
+            return(
+                <div style={{marginTop:'45vh',marginLeft:'45vw'}}>
+                    <TailSpin
+                        heigth="10vh"
+                        width="10vw"
+                        color='grey'
+                        ariaLabel='loading'
+                    />
+                </div>
+            )
+        }
         else if (contestId === '') {
             return (
                 <div>
@@ -79,7 +91,7 @@ class PrevStandings extends React.Component {
 
                         <div class="animation start-about"></div>
                     </nav>
-                    <div class="content">
+                    <div class="content animate-bottom">
                         <select className="select-style"
                             value={selectedOption}
                             onChange={this.handleChange}
@@ -100,11 +112,6 @@ class PrevStandings extends React.Component {
                         <a href="../">LeaderBoard</a>
                         <a href="/PrevStandings">Contests Standings</a>
                         <a className="logout-button" href="/login">Logout</a>
-
-
-                        {/* <a href="#">field3</a>
-        <a href="#">field4</a>
-        <a href="#">field5</a> */}
                         <div class="animation start-about"></div>
                     </nav>
                     <h1>Option to sahi se select karle</h1>
@@ -120,28 +127,12 @@ class PrevStandings extends React.Component {
                         <a href="/PrevStandings">Contests Standings</a>
                         <a className="logout-button" href="/login">Logout</a>
 
-
-                        {/* <a href="#">field3</a>
-        <a href="#">field4</a>
-        <a href="#">field5</a> */}
                         <div class="animation start-about"></div>
                     </nav>
-                    <div className="container">
+                    <div className="container animate-bottom">
                         <h1>Previous Standings</h1>
                         <h1>For Contest - {contestName}</h1>
 
-
-                        {/* <div id="toolbar">
-                            <select className="form-control">
-                                <option value="">All Batches</option>
-                                <option value="2018">2018</option>
-                                <option value="2019">2019</option>
-                                <option value="2020">2020</option>
-                                <option value="2021">2021</option>
-                                <option value="2022">2022</option>
-
-                            </select>
-                        </div> */}
                         {usersStatus !== 'ok' &&
                             <h2>No registered user participated in it</h2>
                         }
