@@ -326,7 +326,8 @@ left: 470;
 
 
 .active{
-    background-color: #5c7b93;
+    background-color: #ae74b6;
+    color:white;
 }
 
 .animate-bottom {
@@ -345,4 +346,27 @@ to { bottom:0px; opacity:1 }
 @keyframes animatebottom { 
 from{ bottom:-100px; opacity:0 } 
 to{ bottom:0; opacity:1 }
+}
+
+
+.user1200{
+    color: rgb(187, 173, 173)!important;
+}
+.user1400{
+    color: rgb(23, 192, 23)!important;
+}
+.user1600{
+    color: #03a89e!important;
+}
+.user1900{
+    color: blue!important;
+}
+.user2200{
+    color: #a0a!important;
+}
+.user2400{
+    color: #ff8c00!important;
+}
+.user2901{
+    color: red!important;
 }
