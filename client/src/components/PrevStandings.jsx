@@ -85,9 +85,7 @@ class PrevStandings extends React.Component {
                     <nav>
                         <a href="../">LeaderBoard</a>
                         <a href="/PrevStandings">Contests Standings</a>
-                        <a className="logout-button" 
-                            onClick={logout}
-                        >Logout</a>
+                        <a className="logout-button" onClick={logout}>Logout</a>
 
                         <div class="animation start-about"></div>
                     </nav>
@@ -111,7 +109,7 @@ class PrevStandings extends React.Component {
                     <nav>
                         <a href="../">LeaderBoard</a>
                         <a href="/PrevStandings">Contests Standings</a>
-                        <a className="logout-button" href="/login">Logout</a>
+                        <a className="logout-button" onClick={logout}>Logout</a>
                         <div class="animation start-about"></div>
                     </nav>
                     <h1>Option to sahi se select karle</h1>
@@ -125,7 +123,7 @@ class PrevStandings extends React.Component {
                     <nav>
                         <a href="../">LeaderBoard</a>
                         <a href="/PrevStandings">Contests Standings</a>
-                        <a className="logout-button" href="/login">Logout</a>
+                        <a className="logout-button" onClick={logout}>Logout</a>
 
                         <div class="animation start-about"></div>
                     </nav>
@@ -154,22 +152,120 @@ class PrevStandings extends React.Component {
                             <tbody>
 
                                 {usersData.map((user, index) => {
-                                    if (user.cf_handle == this.props.current_user)
+                                    if (user.cf_handle == sessionStorage.getItem("userName")){
+                                        if(user.newRating < 1200)
                                         return <tr class='active' id={user.cf_handle}>
                                             <td>{index + 1}</td>
-                                            <td><a href={'https://codeforces.com/profile/' + user.cf_handle} target="_blank" style={{ color: "white" }}>{user.cf_handle}</a></td>
+                                            <td><a class='user1200' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
                                             <td>{user.rank}</td>
                                             <td>{user.oldRating}</td>
                                             <td>{user.newRating}</td>
                                         </tr>
-                                    else
+                                        else if(user.newRating < 1400)
+                                        return <tr class='active' id={user.cf_handle}>
+                                            <td>{index + 1}</td>
+                                            <td><a class='user1400' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
+                                            <td>{user.rank}</td>
+                                            <td>{user.oldRating}</td>
+                                            <td>{user.newRating}</td>
+                                        </tr>
+                                        else if(user.newRating < 1600)
+                                        return <tr class='active' id={user.cf_handle}>
+                                            <td>{index + 1}</td>
+                                            <td><a class='user1600' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
+                                            <td>{user.rank}</td>
+                                            <td>{user.oldRating}</td>
+                                            <td>{user.newRating}</td>
+                                        </tr>
+                                        else if(user.newRating < 1900)
+                                        return <tr class='active' id={user.cf_handle}>
+                                            <td>{index + 1}</td>
+                                            <td><a class='user1900' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
+                                            <td>{user.rank}</td>
+                                            <td>{user.oldRating}</td>
+                                            <td>{user.newRating}</td>
+                                        </tr>
+                                        else if(user.newRating < 2200)
+                                        return <tr class='active' id={user.cf_handle}>
+                                            <td>{index + 1}</td>
+                                            <td><a class='user2200' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
+                                            <td>{user.rank}</td>
+                                            <td>{user.oldRating}</td>
+                                            <td>{user.newRating}</td>
+                                        </tr>
+                                        else if(user.newRating < 2400)
+                                        return <tr class='active' id={user.cf_handle}>
+                                            <td>{index + 1}</td>
+                                            <td><a class='user2400' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
+                                            <td>{user.rank}</td>
+                                            <td>{user.oldRating}</td>
+                                            <td>{user.newRating}</td>
+                                        </tr>
+                                        else 
+                                        return <tr class='active' id={user.cf_handle}>
+                                            <td>{index + 1}</td>
+                                            <td><a class='user2901' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
+                                            <td>{user.rank}</td>
+                                            <td>{user.oldRating}</td>
+                                            <td>{user.newRating}</td>
+                                        </tr>
+                                    }
+                                    else{if(user.newRating < 1200)
                                         return <tr id={user.cf_handle}>
                                             <td>{index + 1}</td>
-                                            <td><a href={'https://codeforces.com/profile/' + user.cf_handle} target="_blank" style={{ color: "white" }}>{user.cf_handle}</a></td>
+                                            <td><a class='user1200' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
                                             <td>{user.rank}</td>
                                             <td>{user.oldRating}</td>
                                             <td>{user.newRating}</td>
                                         </tr>
+                                        else if(user.newRating < 1400)
+                                        return <tr id={user.cf_handle}>
+                                            <td>{index + 1}</td>
+                                            <td><a class='user1400' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
+                                            <td>{user.rank}</td>
+                                            <td>{user.oldRating}</td>
+                                            <td>{user.newRating}</td>
+                                        </tr>
+                                        else if(user.newRating < 1600)
+                                        return <tr id={user.cf_handle}>
+                                            <td>{index + 1}</td>
+                                            <td><a class='user1600' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
+                                            <td>{user.rank}</td>
+                                            <td>{user.oldRating}</td>
+                                            <td>{user.newRating}</td>
+                                        </tr>
+                                        else if(user.newRating < 1900)
+                                        return <tr id={user.cf_handle}>
+                                            <td>{index + 1}</td>
+                                            <td><a class='user1900' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
+                                            <td>{user.rank}</td>
+                                            <td>{user.oldRating}</td>
+                                            <td>{user.newRating}</td>
+                                        </tr>
+                                        else if(user.newRating < 2200)
+                                        return <tr id={user.cf_handle}>
+                                            <td>{index + 1}</td>
+                                            <td><a class='user2200' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
+                                            <td>{user.rank}</td>
+                                            <td>{user.oldRating}</td>
+                                            <td>{user.newRating}</td>
+                                        </tr>
+                                        else if(user.newRating < 2400)
+                                        return <tr id={user.cf_handle}>
+                                            <td>{index + 1}</td>
+                                            <td><a class='user2400' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
+                                            <td>{user.rank}</td>
+                                            <td>{user.oldRating}</td>
+                                            <td>{user.newRating}</td>
+                                        </tr>
+                                        else 
+                                        return <tr id={user.cf_handle}>
+                                            <td>{index + 1}</td>
+                                            <td><a class='user2901' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
+                                            <td>{user.rank}</td>
+                                            <td>{user.oldRating}</td>
+                                            <td>{user.newRating}</td>
+                                        </tr>}
                                 })}
                             </tbody>
                         </table>

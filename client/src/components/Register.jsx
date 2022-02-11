@@ -116,6 +116,7 @@ function Register() {
     const validateOTP = () => {
         if (cfotp == otp1 && instotp == otp2 && instotp !== "" && cfotp != "") {
             console.log('true')
+            sessionStorage.setItem("userName",cf_handle);
             return true;
         }
         return false; //to be changed to false 
