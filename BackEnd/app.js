@@ -7,11 +7,16 @@ const bcrypt = require('bcrypt');
 const mongoose = require("mongoose");
 const axios = require('axios');
 const nodemailer = require("nodemailer");
-const { Timestamp } = require("mongodb");
 
 // Connecting with database
-const url = "mongodb+srv://cp-user:12345@cluster.ye5s9.mongodb.net/CP-Dashboard?retryWrites=true&w=majority"
-mongoose.connect(String(url), { useNewUrlParser: true, useUnifiedTopology: true });
+const url = "mongodb+srv://cp-user:12345@cluster.ye5s9.mongodb.net/CP-Dashboard?retryWrites=true&w=majority";
+(async () => {
+	try {
+		await mongoose.connect(String(url), { useNewUrlParser: true, useUnifiedTopology: true });
+	} catch (err) {
+		console.log('error: ' + err)
+	}
+})()
 
 // Cofiguring app
 app.set("views", __dirname + "/views");
@@ -62,7 +67,6 @@ const Contests = mongoose.model('ContestSchema', contestSchema);
 const UserContests = mongoose.model('userContestSchema', userContestSchema);
 
 // Main Work
-
 // Function for getting details of a user while registering
 async function make_api_call(cf_handle) {
 	const cf_api = "https://codeforces.com/api/";
@@ -100,8 +104,11 @@ async function make_api_call(cf_handle) {
 		}
 	}
 	await get_details();
+	User.updateMany({},{ num_of_questions: number_of_solved_questions},
+
+		);
 	return { num_of_questions: number_of_solved_questions, num_of_contests: number_of_contests, max_rating: max_rating };
-}
+};
 
 app.post('/api/login', async (req, res) => {
 	const cf_handle = req.body.cf_handle;
@@ -208,7 +215,7 @@ app.post('/api/register', async (req, res) => {
 	for (var i = 0; i < contests_array.length; i++) {
 		const contest_id = contests_array[i].contestId;
 		const contest_name = contests_array[i].contestName;
-		const contest = await UserContests.findOne({ contest_id : contest_id }).lean()
+		const contest = await UserContests.findOne({ contest_id: contest_id }).lean()
 		if (!contest) {
 			const participants = [{
 				cf_handle: cf_handle,
@@ -328,7 +335,7 @@ async function getContestDetails() {
 		let contest_id = contests[i].contestId;
 		let contest_name = contests[i].name;
 		let startTime = contests[i].startTime;
-		let check = await Contests.findOne({ contest_id : 1634 }).lean();
+		let check = await Contests.findOne({ contest_id: 1634 }).lean();
 		if (!check) {
 			try {
 				const response = await Contests.create({
@@ -373,10 +380,10 @@ app.post("/update_contests", async (req, res) => {
 				for (var i = 0; i < all_user_contests.length; i++) {
 					const checking_contest_id = all_user_contests[i].contestId;
 
-					var id= contests.indexOf(checking_contest_id);
+					var id = contests.indexOf(checking_contest_id);
 					if (id !== -1) {
-						console.log("Checking ",checking_contest_id);
-						const contest = await UserContests.find({ contest_id : checking_contest_id }).lean();
+						console.log("Checking ", checking_contest_id);
+						const contest = await UserContests.find({ contest_id: checking_contest_id }).lean();
 						let contest_name = all_user_contests[i].contestName;
 						let contest_id = checking_contest_id;
 						if (contest.length === 0) {
@@ -405,18 +412,15 @@ app.post("/update_contests", async (req, res) => {
 								newRating: all_user_contests[i].newRating,
 							}
 
-							let details = await UserContests.findOne({ contest_id : checking_contest_id }).select('participants -_id');
-							var tell=false;
-							for(var index=0;index<details.participants.length;index++)
-							{
-								if(details.participants[index].cf_handle === user.cf_handle)
-								{
-									tell=true;
+							let details = await UserContests.findOne({ contest_id: checking_contest_id }).select('participants -_id');
+							var tell = false;
+							for (var index = 0; index < details.participants.length; index++) {
+								if (details.participants[index].cf_handle === user.cf_handle) {
+									tell = true;
 									break;
 								}
 							}
-							if(tell === false)
-							{
+							if (tell === false) {
 								await UserContests.findOneAndUpdate(
 									{ contest_id: contest_id },
 									{ $addToSet: { participants: participants } },
@@ -438,57 +442,9 @@ app.post("/update_contests", async (req, res) => {
 		}
 	};
 
-	res.json({ status: 'ok'});
+	res.json({ status: 'ok' });
 });
 // For backend use only - one time
-app.get("/all_contests", async (req, res) => {
-	let fetched_data = await axios.get("https://codeforces.com/api/contest.list?gym=false");
-	let data = fetched_data.data;
-	var contests = [];
-
-	for (var i = 0; i < data.result.length; i++) {
-		var id = data.result[i].id;
-		var name = data.result[i].name;
-		var startTime = data.result[i].startTimeSeconds;
-		var phase = data.result[i].phase;
-
-		if (name.length > 1 && startTime > 0 && phase === "FINISHED") {
-			var item = {
-				contestId: parseInt(id),
-				name: name,
-				startTime: parseInt(startTime)
-			};
-
-			contests.push(item);
-		}
-	}
-
-	contests.sort(function (a, b) {
-		if (a.startTime > b.startTime) return -1;
-		if (a.startTime < b.startTime) return 1;
-		return 0;
-	});
-	// Worked only for single time
-	// for(let i=0;i<contests.length;i++)
-	// {
-	// 	let contest_id=contests[i].contestId;
-	// 	let contest_name=contests[i].name;
-	// 	let startTime=contests[i].startTime;
-	// 	try {
-	// 		const response = await Contests.create({
-	// 			contest_id : contest_id,
-	// 			contest_name : contest_name,
-	// 			startTime : startTime
-	// 		})
-	// 	} catch (error) {
-	// 		console.log(contest_id);
-	// 		console.log(error);
-	// 		break;
-	// 	}
-	// }
-	console.log(contests.length);
-	res.send(contests);
-});
 
 app.get("/contest-info/:contest_id", async (req, res) => {
 	const id = req.params.contest_id;
@@ -516,13 +472,41 @@ app.get("/contest-info/:contest_id", async (req, res) => {
 	}
 	const contest = await UserContests.findOne({ contest_id: id }).lean();
 	const contest_details = await Contests.findOne({ contest_id: id }).lean();
-	contest.participants.sort(compare);
 	// console.log(contest.participants)
 	if (!contest) {
 		return res.send({ status: "no users", data: dummy, contest_name: contest_details.contest_name });
 	}
+	contest.participants.sort(compare);
 	return res.send({ status: "ok", data: contest.participants, contest_name: contest_details.contest_name });
 });
+async function fetchDetails() {
+	const cursor = User.find().cursor();
+	for (let user = await cursor.next(); user != null; user = await cursor.next())
+	{
+		try {
+			let all_attempted_questions = [];
+			const req = await axios.get("https://codeforces.com/api/user.status?handle=" + user.cf_handle);
+			for (let i = 0; i < req.data.result.length; i++) {
+				if (req.data.result[i].verdict === 'OK') {
+					let str = String(req.data.result[i].problem.contestId) + '-' + req.data.result[i].problem.index;
+					all_attempted_questions.push(str);
+				}
+			}
+			let number_of_solved_questions = [...new Set(all_attempted_questions)].length;
+			if(user.num_of_questions < number_of_solved_questions)
+			{
+				await User.findOneAndUpdate({ cf_handle: user.cf_handle }, {
+					num_of_questions : number_of_solved_questions,
+				});
+			}
+		} catch (error) {
+			console.log(error)
+		}
+	}
+}
+
+fetchDetails();
+setInterval(fetchDetails, 1000 * 60*60);
 
 // Hosting it
 var port = process.env.PORT || 5000;

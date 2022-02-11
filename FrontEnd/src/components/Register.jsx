@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
 import { Helmet } from "react-helmet";
 var otp1 = ''; var otp2 = '';
@@ -14,7 +14,11 @@ function Register() {
     const [confirmpassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
     const [show, setShow] = useState(false);
-
+    const loggined = sessionStorage.getItem("authToken");
+    if(loggined)
+    {
+        return <Navigate to="/"></Navigate>
+    }
     const registerHandler = async (e) => {
         e.preventDefault();
         const check = validateOTP();
@@ -257,7 +261,7 @@ function Register() {
                     Submit OTP.
                 </button> : null}
                 <br />
-                <span>Already have an account? <Link to="/login">Login</Link> </span>
+                <span>Already have an account? <Link className="lreg" to="/login">Login</Link> </span>
             </form>
             <ul class="box-area">
                 <li></li>

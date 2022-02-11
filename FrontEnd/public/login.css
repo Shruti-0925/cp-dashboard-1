@@ -115,7 +115,7 @@ div input {
   font-weight: 300;
 }
 
-#signup, #login{
+#signup,#login{
   appearance: none;
   outline: 0;
   background-color: white;
@@ -127,6 +127,7 @@ div input {
   width: 250px;
   font-size: 18px;
 }
+
 
 .circle-img {
   border-radius: 20%;
@@ -149,3 +150,23 @@ div input {
   color: red;
 }
 
+.lreg{
+  color:#cdcaff;
+  font-weight: bold;
+}
+
+.lreg:hover{
+  color:black;
+}
+#fgpsd{
+  text-align:center;
+  color:#cdcaff;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+#fgpsd:hover{
+  color:black;
+  text-align:center;
+  text-decoration: underline;
+}
