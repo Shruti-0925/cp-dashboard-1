@@ -57,12 +57,13 @@ class PrevStandings extends React.Component {
         ranks.push(i+1);
     }
 
-        if (!DataisLoaded) return <div>
-            <h1> Pleses wait some time.... </h1> </div>;
+        if (!DataisLoaded) {
+            return (<div><h1 className="loader"></h1></div>);
+        }
         else if (contestId === '') {
             return (
                 <div>
-                
+                <h1 className="loader"></h1>
                   <nav>
                 <a href="../">LeaderBoard</a>
                   <a href="/PrevStandings">Contests Standings</a>

@@ -27,12 +27,12 @@ class LeaderBoard extends React.Component {
 
         const { DataisLoaded, users_data } = this.state;
 
-        if (!DataisLoaded) return <div>
-            <h1> Pleses wait some time.... </h1> </div>;
+        if (!DataisLoaded) return (<div><h1 className="loader">dddd</h1></div>);
         else {
 
             return (
                 <div className="all">
+               
                  <nav>
         <a href="">LeaderBoard</a>
        
