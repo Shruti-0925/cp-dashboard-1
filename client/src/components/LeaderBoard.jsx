@@ -89,7 +89,7 @@ class LeaderBoard extends React.Component {
                             <tbody>
                                 {users_data.map(user => {
                                     if (user.cf_handle == sessionStorage.getItem("userName")){
-                                        if(user.max_rating < 1200)
+                                        if(user.curr_rating < 1200)
                                         return <tr class='active' id={user.cf_handle}>
                                             <td><a href={'https://codeforces.com/profile/' + user.cf_handle} target="_blank" class='user1200'>{user.cf_handle}</a></td>
                                             <td>{user.batch}</td>
@@ -98,7 +98,7 @@ class LeaderBoard extends React.Component {
                                             <td>{user.max_rating}</td>
                                             <td>{user.curr_rating}</td>
                                         </tr>
-                                        else if(user.max_rating < 1400)
+                                        else if(user.curr_rating < 1400)
                                         return <tr class='active' id={user.cf_handle}>
                                             <td><a href={'https://codeforces.com/profile/' + user.cf_handle} target="_blank" class='user1400'>{user.cf_handle}</a></td>
                                             <td>{user.batch}</td>
@@ -107,7 +107,7 @@ class LeaderBoard extends React.Component {
                                             <td>{user.max_rating}</td>
                                             <td>{user.curr_rating}</td>
                                         </tr> 
-                                        else if(user.max_rating < 1600)
+                                        else if(user.curr_rating < 1600)
                                         return <tr class='active' id={user.cf_handle}>
                                             <td><a href={'https://codeforces.com/profile/' + user.cf_handle} target="_blank" class='user1600'>{user.cf_handle}</a></td>
                                             <td>{user.batch}</td>
@@ -116,7 +116,7 @@ class LeaderBoard extends React.Component {
                                             <td>{user.max_rating}</td>
                                             <td>{user.curr_rating}</td>
                                         </tr>
-                                        else if(user.max_rating < 1900)
+                                        else if(user.curr_rating < 1900)
                                         return <tr class='active' id={user.cf_handle}>
                                             <td><a href={'https://codeforces.com/profile/' + user.cf_handle} target="_blank" class='user1900'>{user.cf_handle}</a></td>
                                             <td>{user.batch}</td>
@@ -125,7 +125,7 @@ class LeaderBoard extends React.Component {
                                             <td>{user.max_rating}</td>
                                             <td>{user.curr_rating}</td>
                                         </tr>    
-                                        else if(user.max_rating < 2200)
+                                        else if(user.curr_rating < 2200)
                                         return <tr class='active' id={user.cf_handle}>
                                             <td><a href={'https://codeforces.com/profile/' + user.cf_handle} target="_blank" class='user2200'>{user.cf_handle}</a></td>
                                             <td>{user.batch}</td>
@@ -134,7 +134,7 @@ class LeaderBoard extends React.Component {
                                             <td>{user.max_rating}</td>
                                             <td>{user.curr_rating}</td>
                                         </tr> 
-                                        else if(user.max_rating < 2400)
+                                        else if(user.curr_rating < 2400)
                                         return <tr class='active' id={user.cf_handle}>
                                             <td><a href={'https://codeforces.com/profile/' + user.cf_handle} target="_blank" class='user2400'>{user.cf_handle}</a></td>
                                             <td>{user.batch}</td>
@@ -155,7 +155,7 @@ class LeaderBoard extends React.Component {
                                                
                                     }
                                     else{
-                                        if(user.max_rating < 1200)
+                                        if(user.curr_rating < 1200)
                                         return <tr id={user.cf_handle}>
                                             <td><a href={'https://codeforces.com/profile/' + user.cf_handle} target="_blank" class='user1200'>{user.cf_handle}</a></td>
                                             <td>{user.batch}</td>
@@ -164,7 +164,7 @@ class LeaderBoard extends React.Component {
                                             <td>{user.max_rating}</td>
                                             <td>{user.curr_rating}</td>
                                         </tr>
-                                        else if(user.max_rating < 1400)
+                                        else if(user.curr_rating < 1400)
                                         return <tr id={user.cf_handle}>
                                             <td><a class='user1400' href={'https://codeforces.com/profile/' + user.cf_handle} target="_blank" >{user.cf_handle}</a></td>
                                             <td>{user.batch}</td>
@@ -173,7 +173,7 @@ class LeaderBoard extends React.Component {
                                             <td>{user.max_rating}</td>
                                             <td>{user.curr_rating}</td>
                                         </tr> 
-                                        else if(user.max_rating < 1600)
+                                        else if(user.curr_rating < 1600)
                                         return <tr id={user.cf_handle}>
                                             <td ><a href={'https://codeforces.com/profile/' + user.cf_handle} target="_blank" class='user1600'>{user.cf_handle}</a></td>
                                             <td>{user.batch}</td>
@@ -182,7 +182,7 @@ class LeaderBoard extends React.Component {
                                             <td>{user.max_rating}</td>
                                             <td>{user.curr_rating}</td>
                                         </tr>
-                                        else if(user.max_rating < 1900)
+                                        else if(user.curr_rating < 1900)
                                         return <tr id={user.cf_handle}>
                                             <td ><a href={'https://codeforces.com/profile/' + user.cf_handle} target="_blank" class='user1900'>{user.cf_handle}</a></td>
                                             <td>{user.batch}</td>
@@ -191,7 +191,7 @@ class LeaderBoard extends React.Component {
                                             <td>{user.max_rating}</td>
                                             <td>{user.curr_rating}</td>
                                         </tr>    
-                                        else if(user.max_rating < 2200)
+                                        else if(user.curr_rating < 2200)
                                         return <tr id={user.cf_handle}>
                                             <td ><a href={'https://codeforces.com/profile/' + user.cf_handle} target="_blank" class='user2200'>{user.cf_handle}</a></td>
                                             <td>{user.batch}</td>
@@ -200,7 +200,7 @@ class LeaderBoard extends React.Component {
                                             <td>{user.max_rating}</td>
                                             <td>{user.curr_rating}</td>
                                         </tr>       
-                                        else if(user.max_rating < 2400)
+                                        else if(user.curr_rating < 2400)
                                         return <tr id={user.cf_handle}>
                                             <td ><a href={'https://codeforces.com/profile/' + user.cf_handle} class='user2400' target="_blank">{user.cf_handle}</a></td>
                                             <td>{user.batch}</td>
