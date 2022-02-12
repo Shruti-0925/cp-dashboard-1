@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import ReactDOM from "react-dom";
 var otp = '';
 var check = true;
 var pswd = '';
-
+var check1 = true;
 function Login() {
     const [isMouseover, setMouseover] = useState(false);
     const [cf_handle, setCFHandle] = useState("");
@@ -29,11 +30,12 @@ function Login() {
         console.log("paswd")
         console.log(pswd);
         console.log("updating password")
-        const check1 = matchpswd();
+       if(!check){ matchpswd();}
+        validate();
         console.log("status")
         console.log(check);
         console.log(check1);
-        if (check || check1) {
+        if ((check && check1) ||  check1) {
             console.log("login")
             let details = {
                 cf_handle: cf_handle,
@@ -68,12 +70,24 @@ function Login() {
         setMouseover(false);
     }
     const fpswd = () => {
+        check1=true;
+        if(cf_handle==""){
+        setTimeout(() => {
+            ReactDOM.render("", document.getElementById("cf_handleE"));
+        }, 5000);
+        check1=false;
+        ReactDOM.render("Please enter your CF handle.", document.getElementById("cf_handleE"));
+        }
+       // validate();
+        if(check1){
         check = false;
         console.log("forget pswd")
         setIslogin(false);
-        setIsmail(true);
+        setIsmail(true);}
     }
     const rpswd = () => {
+        validate();
+        if(check1){
         console.log("reset pswd")
         setIsmail(false);
         setIsotp(true);
@@ -94,16 +108,28 @@ function Login() {
             body: JSON.stringify(details),
         });
         console.log("mail sent")
-    }
+    }}
     const validateOTP = () => {
         console.log("validating otp")
-        if (instotp == otp && instotp !== "") {
-            console.log('true')
-            return true;
+        if(instotp==""){
+            setTimeout(() => {
+                ReactDOM.render("", document.getElementById("instotpE"));
+            }, 5000);
+            ReactDOM.render("OTP can not be empty.", document.getElementById("instotpE"));
+            return false
         }
-        return false;
+        if (instotp != otp) {
+            setTimeout(() => {
+                ReactDOM.render("", document.getElementById("instotpE"));
+            }, 5000);
+            ReactDOM.render("OTP couldn't verify.", document.getElementById("instotpE"));
+            return false;
+        }
+        return true;
     };
     const subOTP = () => {
+        validate();
+        if(check1){
         console.log("submit otp")
         var check = validateOTP();
         if (check) {
@@ -112,7 +138,7 @@ function Login() {
         }
         else {
             console.log("invalid otp");
-        }
+        }}
     }
     const matchpswd = async () => {
         if (new_password == c_password && new_password != "") {
@@ -135,6 +161,76 @@ function Login() {
         }
         return false;
     }
+    const CheckinstEmail = () => {
+        if (inst_email == "") {
+            setTimeout(() => {
+                ReactDOM.render("", document.getElementById("inst_emailE"));
+            }, 5000);
+            ReactDOM.render("Inst Email can not be empty.", document.getElementById("inst_emailE"));
+            return false;
+        }
+        if (inst_email.slice(7) != "students.iitmandi.ac.in") {
+            setTimeout(() => {
+                ReactDOM.render("", document.getElementById("inst_emailE"));
+            }, 5000);
+            ReactDOM.render("Please enter valid institute email.", document.getElementById("inst_emailE"));
+            return false;
+        }
+        return true;
+    }
+    const CheckPassword = () => {
+        if (new_password.length == 0) {
+            setTimeout(() => {
+                ReactDOM.render("", document.getElementById("n_passwordE"));
+            }, 5000);
+            console.log(new_password.length)
+            ReactDOM.render("Password can not be empty.", document.getElementById("n_passwordE"));
+            return false;
+        }
+        if (new_password.length < 6) {
+            setTimeout(() => {
+                ReactDOM.render("", document.getElementById("n_passwordE"));
+            }, 5000);
+            ReactDOM.render("Password should be atleast 6 characters.", document.getElementById("n_passwordE"));
+            return false;
+        }
+        return true;
+
+    }
+    const validate=()=>{
+        check1=true;
+        if(islogin){
+        if(cf_handle=="" ){
+        
+            setTimeout(() => {
+                ReactDOM.render("", document.getElementById("cf_handleE"));
+            }, 5000);
+            check1=false;
+            ReactDOM.render("CF handle can not be empty.", document.getElementById("cf_handleE"));
+        }
+        if(password==""){
+            setTimeout(() => {
+                ReactDOM.render("", document.getElementById("passwordE"));
+            }, 5000);
+            check1=false;
+            ReactDOM.render("Password can not be empty.", document.getElementById("passwordE"));
+        }}if(ismail){
+        if(!CheckinstEmail()){
+            check1=false;
+        }}if(isotp){
+        if(!validateOTP() ){check1=false;}}
+        if(isnewpwd){
+        if (!CheckPassword()) { check1 = false; }
+        if (new_password != c_password && CheckPassword() ) {
+            setTimeout(() => {
+                ReactDOM.render("", document.getElementById("c_passwordE"));
+            }, 5000);
+            check1 = false;
+            ReactDOM.render("Confirm password doesn't matches with password.", document.getElementById("c_passwordE"));
+
+        }}
+
+    }
     return (
         <div>
 
@@ -144,9 +240,7 @@ function Login() {
             <h1> Welcome</h1>
             <img
                 className="circle-img"
-                // src="https://iitmandi.ac.in/institute/images/iitmandi_logo.png"
-                
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRdUlMhsNL6zpyimr31JEbtBgqgqjorc9l5gJFAFgwdQMr7z43oiLoQIgWQ7txEOJcg4g&usqp=CAU"
+                src="https://iitmandi.ac.in/institute/images/iitmandi_logo.png"
                 alt="avatar_img"
             />
             <br></br>
@@ -163,7 +257,7 @@ function Login() {
                         onChange={(e) => setCFHandle(e.target.value)}
                     />
                 </div> : null}
-
+                <div id="cf_handleE" style={{ fontSize: 14, color: "white" }}></div>
                 {islogin ? <div className="input-group">
                     <div id="pwd-text">Password</div>
                     <input
@@ -174,7 +268,7 @@ function Login() {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </div> : null}
-
+                <div id="passwordE" style={{ fontSize: 14, color: "white" }}></div>
                 {ismail ? <div className="input-group">
                     <div id="user-text">Institute Email</div>
                     <input
@@ -185,6 +279,7 @@ function Login() {
                         onChange={(e) => setInstEmail(e.target.value)}
                     />
                 </div> : null}
+                <div id="inst_emailE" style={{ fontSize: 14, color: "white" }}></div>
                 {ismail ?
                     <button
                         onClick={rpswd}
@@ -203,6 +298,7 @@ function Login() {
                             onChange={(e) => setInstotp(e.target.value)}
                         />
                     </div> : null}
+                    <div id="instotpE" style={{ fontSize: 14, color: "white" }}></div>
                 {isotp ?
                     <button
                         onClick={subOTP}
@@ -220,6 +316,7 @@ function Login() {
                                 onChange={(e) => setnewPassword(e.target.value)}
                             />
                         </div> : null}
+                        <div id="n_passwordE" style={{ fontSize: 14, color: "white" }}></div>
                 {isnewpwd ?
                     <div className="input-group">
                         <div id="pwd-text">Confirm Password</div>
@@ -231,6 +328,7 @@ function Login() {
                             onChange={(e) => setcPassword(e.target.value)}
                         />
                     </div> : null}
+                    <div id="c_passwordE" style={{ fontSize: 14, color: "white" }}></div>
                 {isnewpwd ?
                     <button
                         type="submit"

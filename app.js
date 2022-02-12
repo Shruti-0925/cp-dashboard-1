@@ -261,7 +261,13 @@ app.post('/api/register', async (req, res) => {
 	}
 	return res.json({ status: 'ok', token: '123' });
 })
-
+app.post('/api/cf_handle_check', async (req, res) => {
+	alert("check")
+	const cf_handle = req.body.cf_handle;
+	const user = await User.findOne({ cf_handle }).lean();
+	if (user) {
+		return res.json({ status: 'error', error: 'CF Handle already in use' });
+	}});
 const otpEmail = nodemailer.createTransport({
 	host: "smtp.gmail.com",
 	port: 587,
