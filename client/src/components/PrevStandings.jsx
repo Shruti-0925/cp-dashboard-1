@@ -127,6 +127,7 @@ class PrevStandings extends React.Component {
 
                         <div class="animation start-about"></div>
                     </nav>
+                    
                     <div className="container animate-bottom">
                         <h1>Previous Standings</h1>
                         <h1>For Contest - {contestName}</h1>
@@ -134,6 +135,19 @@ class PrevStandings extends React.Component {
                         {usersStatus !== 'ok' &&
                             <h2>No registered user participated in it</h2>
                         }
+                        
+                    
+                        <div id="toolbar">
+                            <select className="form-control">
+                                <option value="">All Batches</option>
+                                <option value="2018">2018</option>
+                                <option value="2019">2019</option>
+                                <option value="2020">2020</option>
+                                <option value="2021">2021</option>
+                                <option value="2022">2022</option>
+
+                            </select>
+                        </div>
 
                         <table id="table"
                             data-toggle="table"
@@ -144,6 +158,7 @@ class PrevStandings extends React.Component {
                                 <tr>
                                     <th data-field="serial" data-sortable="true">Rank</th>
                                     <th data-field="cf_handle" data-sortable="false">CF Handle</th>
+                                    <th data-field="batch" data-sortable="false" data-filter-control="select">Batch</th>
                                     <th data-field="rank" data-sortable="true">Rank</th>
                                     <th data-field="oldRating" data-sortable="true">Old Rating</th>
                                     <th data-field="newRating" data-sortable="true">New Rating</th>
@@ -157,6 +172,7 @@ class PrevStandings extends React.Component {
                                         return <tr class='active' id={user.cf_handle}>
                                             <td>{index + 1}</td>
                                             <td><a class='user1200' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
+                                            <td>{user.batch}</td>
                                             <td>{user.rank}</td>
                                             <td>{user.oldRating}</td>
                                             <td>{user.newRating}</td>
@@ -165,6 +181,7 @@ class PrevStandings extends React.Component {
                                         return <tr class='active' id={user.cf_handle}>
                                             <td>{index + 1}</td>
                                             <td><a class='user1400' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
+                                            <td>{user.batch}</td>
                                             <td>{user.rank}</td>
                                             <td>{user.oldRating}</td>
                                             <td>{user.newRating}</td>
@@ -173,6 +190,7 @@ class PrevStandings extends React.Component {
                                         return <tr class='active' id={user.cf_handle}>
                                             <td>{index + 1}</td>
                                             <td><a class='user1600' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
+                                            <td>{user.batch}</td>
                                             <td>{user.rank}</td>
                                             <td>{user.oldRating}</td>
                                             <td>{user.newRating}</td>
@@ -181,6 +199,7 @@ class PrevStandings extends React.Component {
                                         return <tr class='active' id={user.cf_handle}>
                                             <td>{index + 1}</td>
                                             <td><a class='user1900' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
+                                            <td>{user.batch}</td>
                                             <td>{user.rank}</td>
                                             <td>{user.oldRating}</td>
                                             <td>{user.newRating}</td>
@@ -189,6 +208,7 @@ class PrevStandings extends React.Component {
                                         return <tr class='active' id={user.cf_handle}>
                                             <td>{index + 1}</td>
                                             <td><a class='user2200' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
+                                            <td>{user.batch}</td>
                                             <td>{user.rank}</td>
                                             <td>{user.oldRating}</td>
                                             <td>{user.newRating}</td>
@@ -197,6 +217,7 @@ class PrevStandings extends React.Component {
                                         return <tr class='active' id={user.cf_handle}>
                                             <td>{index + 1}</td>
                                             <td><a class='user2400' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
+                                            <td>{user.batch}</td>
                                             <td>{user.rank}</td>
                                             <td>{user.oldRating}</td>
                                             <td>{user.newRating}</td>
@@ -205,6 +226,7 @@ class PrevStandings extends React.Component {
                                         return <tr class='active' id={user.cf_handle}>
                                             <td>{index + 1}</td>
                                             <td><a class='user2901' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
+                                            <td>{user.batch}</td>
                                             <td>{user.rank}</td>
                                             <td>{user.oldRating}</td>
                                             <td>{user.newRating}</td>
@@ -214,6 +236,7 @@ class PrevStandings extends React.Component {
                                         return <tr id={user.cf_handle}>
                                             <td>{index + 1}</td>
                                             <td><a class='user1200' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
+                                            <td>{user.batch}</td>
                                             <td>{user.rank}</td>
                                             <td>{user.oldRating}</td>
                                             <td>{user.newRating}</td>
@@ -222,6 +245,7 @@ class PrevStandings extends React.Component {
                                         return <tr id={user.cf_handle}>
                                             <td>{index + 1}</td>
                                             <td><a class='user1400' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
+                                            <td>{user.batch}</td>
                                             <td>{user.rank}</td>
                                             <td>{user.oldRating}</td>
                                             <td>{user.newRating}</td>
@@ -230,6 +254,7 @@ class PrevStandings extends React.Component {
                                         return <tr id={user.cf_handle}>
                                             <td>{index + 1}</td>
                                             <td><a class='user1600' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
+                                            <td>{user.batch}</td>
                                             <td>{user.rank}</td>
                                             <td>{user.oldRating}</td>
                                             <td>{user.newRating}</td>
@@ -238,6 +263,7 @@ class PrevStandings extends React.Component {
                                         return <tr id={user.cf_handle}>
                                             <td>{index + 1}</td>
                                             <td><a class='user1900' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
+                                            <td>{user.batch}</td>
                                             <td>{user.rank}</td>
                                             <td>{user.oldRating}</td>
                                             <td>{user.newRating}</td>
@@ -246,6 +272,7 @@ class PrevStandings extends React.Component {
                                         return <tr id={user.cf_handle}>
                                             <td>{index + 1}</td>
                                             <td><a class='user2200' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
+                                            <td>{user.batch}</td>
                                             <td>{user.rank}</td>
                                             <td>{user.oldRating}</td>
                                             <td>{user.newRating}</td>
@@ -254,6 +281,7 @@ class PrevStandings extends React.Component {
                                         return <tr id={user.cf_handle}>
                                             <td>{index + 1}</td>
                                             <td><a class='user2400' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
+                                            <td>{user.batch}</td>
                                             <td>{user.rank}</td>
                                             <td>{user.oldRating}</td>
                                             <td>{user.newRating}</td>
@@ -262,6 +290,7 @@ class PrevStandings extends React.Component {
                                         return <tr id={user.cf_handle}>
                                             <td>{index + 1}</td>
                                             <td><a class='user2901' href={'https://codeforces.com/profile/' + user.cf_handle } target="_blank">{user.cf_handle}</a></td>
+                                            <td>{user.batch}</td>
                                             <td>{user.rank}</td>
                                             <td>{user.oldRating}</td>
                                             <td>{user.newRating}</td>
