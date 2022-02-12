@@ -240,7 +240,7 @@ function Login() {
             <h1> Welcome</h1>
             <img
                 className="circle-img"
-                src="https://iitmandi.ac.in/institute/images/iitmandi_logo.png"
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRdUlMhsNL6zpyimr31JEbtBgqgqjorc9l5gJFAFgwdQMr7z43oiLoQIgWQ7txEOJcg4g&usqp=CAU"
                 alt="avatar_img"
             />
             <br></br>
