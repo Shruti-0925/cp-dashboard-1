@@ -30,11 +30,12 @@ const userSchema = new mongoose.Schema(
 	{
 		cf_handle: { type: String, required: true, unique: true },
 		cf_email: { type: String, required: true },
-		inst_email: { type: String, required: true },
+		inst_email: { type: String, required: true, unique: true },
 		password: { type: String, required: true },
 		num_of_contests: { type: String, required: true },
 		max_rating: { type: String, required: true },
 		num_of_questions: { type: String, required: true },
+		curr_rating: { type: String, required: true },
 		batch: { type: String, required: true },
 	},
 	{ collection: 'Password-Details' }
@@ -54,6 +55,7 @@ const userContestSchema = new mongoose.Schema(
 		participants: [
 			{
 				cf_handle: { type: String, required: true, uniqueItems: true },
+				batch : {type :String ,required:true},
 				rank: { type: Number, required: true },
 				oldRating: { type: Number, required: true },
 				newRating: { type: Number, required: true }
@@ -76,9 +78,10 @@ async function make_api_call(cf_handle) {
 	let number_of_solved_questions = 0;
 	let max_rating = 0;
 	let number_of_contests = 0;
+	let curr_rating = 0;
 	async function get_details() {
 		try {
-			let res = await axios.all([req1, req2, req3]).then(axios.spread((...responses) => {
+			await axios.all([req1, req2, req3]).then(axios.spread((...responses) => {
 				const responseOne = responses[0];
 				const responseTwo = responses[1];
 				const responesThree = responses[2];
@@ -93,9 +96,11 @@ async function make_api_call(cf_handle) {
 				number_of_contests = responseTwo.data.result.length;
 				if (responesThree.data.result[0].maxRating !== undefined) {
 					max_rating = responesThree.data.result[0].maxRating;
+					curr_rating = responesThree.data.result[0].rating;
 				}
 				else {
 					max_rating = 0;
+					curr_rating = 0;
 				}
 			}))
 		}
@@ -104,10 +109,10 @@ async function make_api_call(cf_handle) {
 		}
 	}
 	await get_details();
-	User.updateMany({},{ num_of_questions: number_of_solved_questions},
+	User.updateMany({}, { num_of_questions: number_of_solved_questions },
 
-		);
-	return { num_of_questions: number_of_solved_questions, num_of_contests: number_of_contests, max_rating: max_rating };
+	);
+	return { num_of_questions: number_of_solved_questions, num_of_contests: number_of_contests, max_rating: max_rating, curr_rating: curr_rating };
 };
 
 app.post('/api/login', async (req, res) => {
@@ -192,6 +197,7 @@ app.post('/api/register', async (req, res) => {
 	let num_of_questions = result.num_of_questions;
 	let max_rating = result.max_rating;
 	let num_of_contests = result.num_of_contests;
+	let curr_rating = result.curr_rating;
 	let batch = "20" + inst_email.slice(1, 3);
 	try {
 		const response = await User.create({
@@ -202,7 +208,8 @@ app.post('/api/register', async (req, res) => {
 			num_of_contests,
 			max_rating,
 			num_of_questions,
-			batch,
+			curr_rating,
+			batch
 		})
 		console.log('User created successfully: ', response);
 	} catch (error) {
@@ -210,7 +217,7 @@ app.post('/api/register', async (req, res) => {
 			// duplicate key
 			return res.json({ status: 'error', error: 'CF Handle already in use' })
 		}
-		throw error
+		return res.json({status :'error',error:error});
 	}
 	for (var i = 0; i < contests_array.length; i++) {
 		const contest_id = contests_array[i].contestId;
@@ -219,6 +226,7 @@ app.post('/api/register', async (req, res) => {
 		if (!contest) {
 			const participants = [{
 				cf_handle: cf_handle,
+				batch : batch,
 				rank: contests_array[i].rank,
 				oldRating: contests_array[i].oldRating,
 				newRating: contests_array[i].newRating,
@@ -238,12 +246,13 @@ app.post('/api/register', async (req, res) => {
 		else {
 			const participants = {
 				cf_handle: cf_handle,
+				batch:batch,
 				rank: contests_array[i].rank,
 				oldRating: contests_array[i].oldRating,
 				newRating: contests_array[i].newRating,
 			}
 
-			UserContests.findOneAndUpdate(
+			await UserContests.findOneAndUpdate(
 				{ contest_id: contest_id },
 				{ $addToSet: { participants: participants } },
 			);
@@ -335,7 +344,7 @@ async function getContestDetails() {
 		let contest_id = contests[i].contestId;
 		let contest_name = contests[i].name;
 		let startTime = contests[i].startTime;
-		let check = await Contests.findOne({ contest_id: 1634 }).lean();
+		let check = await Contests.findOne({ contest_id: contest_id }).lean();
 		if (!check) {
 			try {
 				const response = await Contests.create({
@@ -355,22 +364,35 @@ async function getContestDetails() {
 app.post("/update_contests", async (req, res) => {
 	let contests = await getContestDetails();
 	if (contests.length === 0) {
-		res.json({ status: 'ok', message: 'Already Up to date' });
+		return res.json({ status: 'ok', message: 'Already Up to date' });
 	}
 	// For updating user info
 	let cursor = User.find().cursor();
 	for (let user = await cursor.next(); user != null; user = await cursor.next()) {
 		try {
 			console.log(user.cf_handle);
-			const response = await axios.get("https://codeforces.com/api/user.info?handles=" + user.cf_handle);
-			const response2 = await axios.get("https://codeforces.com/api/user.rating?handle=" + user.cf_handle);
-			// console.log(response.data.result[0].maxRating)
-			// console.log(response2.data.result.length)
+			const response = await axios.get("https://codeforces.com/api/user.info?handles=" + user.cf_handle, {
+				headers: {
+					Accept: "application/json",
+				}
+			});
+			const response2 = await axios.get("https://codeforces.com/api/user.rating?handle=" + user.cf_handle, {
+				headers: {
+					Accept: "application/json",
+				}
+			});
+			console.log(response.data.result[0].maxRating)
+			console.log(response2.data.result.length)
 			let check = false;
 			if (response.data.result[0].maxRating !== undefined && response.data.result[0].maxRating > user.max_rating) {
 				let max_rating = response.data.result[0].maxRating;
 				user.max_rating = max_rating;
 				check = true;
+			}
+			if(user.curr_rating !== response.data.result[0].rating)
+			{
+				user.curr_rating = response.data.result[0].rating;
+				check=true;
 			}
 			if (response2.data.result.length >= user.num_of_contests) {
 				let all_user_contests = response2.data.result;
@@ -389,6 +411,7 @@ app.post("/update_contests", async (req, res) => {
 						if (contest.length === 0) {
 							const participants = [{
 								cf_handle: user.cf_handle,
+								batch : user.batch,
 								rank: all_user_contests[i].rank,
 								oldRating: all_user_contests[i].oldRating,
 								newRating: all_user_contests[i].newRating,
@@ -401,12 +424,13 @@ app.post("/update_contests", async (req, res) => {
 								})
 								console.log("created", contest_id);
 							} catch (error) {
-								res.json({ status: 'error' });
+								return res.json({ status: 'error' });
 							}
 						}
 						else {
 							const participants = {
 								cf_handle: user.cf_handle,
+								batch : user.batch,
 								rank: all_user_contests[i].rank,
 								oldRating: all_user_contests[i].oldRating,
 								newRating: all_user_contests[i].newRating,
@@ -434,15 +458,17 @@ app.post("/update_contests", async (req, res) => {
 			if (check === true) {
 				await User.findOneAndUpdate({ cf_handle: user.cf_handle }, {
 					num_of_contests: user.num_of_contests,
-					max_rating: user.max_rating
+					max_rating: user.max_rating,
+					curr_rating : user.curr_rating
 				});
 			}
 		} catch (error) {
-			res.json({ status: 'error' });
+			console.log(error);
+			return res.json({ status: 'error' });
 		}
 	};
 
-	res.json({ status: 'ok' });
+	return res.json({ status: 'ok' });
 });
 // For backend use only - one time
 
@@ -479,10 +505,11 @@ app.get("/contest-info/:contest_id", async (req, res) => {
 	contest.participants.sort(compare);
 	return res.send({ status: "ok", data: contest.participants, contest_name: contest_details.contest_name });
 });
+
+
 async function fetchDetails() {
 	const cursor = User.find().cursor();
-	for (let user = await cursor.next(); user != null; user = await cursor.next())
-	{
+	for (let user = await cursor.next(); user != null; user = await cursor.next()) {
 		try {
 			let all_attempted_questions = [];
 			const req = await axios.get("https://codeforces.com/api/user.status?handle=" + user.cf_handle);
@@ -493,10 +520,9 @@ async function fetchDetails() {
 				}
 			}
 			let number_of_solved_questions = [...new Set(all_attempted_questions)].length;
-			if(user.num_of_questions < number_of_solved_questions)
-			{
+			if (user.num_of_questions < number_of_solved_questions) {
 				await User.findOneAndUpdate({ cf_handle: user.cf_handle }, {
-					num_of_questions : number_of_solved_questions,
+					num_of_questions: number_of_solved_questions,
 				});
 			}
 		} catch (error) {
@@ -506,7 +532,7 @@ async function fetchDetails() {
 }
 
 fetchDetails();
-setInterval(fetchDetails, 1000 * 60*60);
+setInterval(fetchDetails, 1000 * 60 * 60);
 
 // Hosting it
 var port = process.env.PORT || 5000;
