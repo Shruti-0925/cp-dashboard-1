@@ -83,6 +83,7 @@ class LeaderBoard extends React.Component {
                                     <th data-field="questions" data-sortable="true">Questions</th>
                                     <th data-field="contests" data-sortable="true">Contests</th>
                                     <th data-field="rating" data-sortable="true">Max Rating</th>
+                                    <th data-field="rating2" data-sortable="true">Current Rating</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -95,6 +96,7 @@ class LeaderBoard extends React.Component {
                                             <td>{user.num_of_questions}</td>
                                             <td>{user.num_of_contests}</td>
                                             <td>{user.max_rating}</td>
+                                            <td>{user.curr_rating}</td>
                                         </tr>
                                         else if(user.max_rating < 1400)
                                         return <tr class='active' id={user.cf_handle}>
@@ -103,6 +105,7 @@ class LeaderBoard extends React.Component {
                                             <td>{user.num_of_questions}</td>
                                             <td>{user.num_of_contests}</td>
                                             <td>{user.max_rating}</td>
+                                            <td>{user.curr_rating}</td>
                                         </tr> 
                                         else if(user.max_rating < 1600)
                                         return <tr class='active' id={user.cf_handle}>
@@ -111,6 +114,7 @@ class LeaderBoard extends React.Component {
                                             <td>{user.num_of_questions}</td>
                                             <td>{user.num_of_contests}</td>
                                             <td>{user.max_rating}</td>
+                                            <td>{user.curr_rating}</td>
                                         </tr>
                                         else if(user.max_rating < 1900)
                                         return <tr class='active' id={user.cf_handle}>
@@ -119,6 +123,7 @@ class LeaderBoard extends React.Component {
                                             <td>{user.num_of_questions}</td>
                                             <td>{user.num_of_contests}</td>
                                             <td>{user.max_rating}</td>
+                                            <td>{user.curr_rating}</td>
                                         </tr>    
                                         else if(user.max_rating < 2200)
                                         return <tr class='active' id={user.cf_handle}>
@@ -127,6 +132,7 @@ class LeaderBoard extends React.Component {
                                             <td>{user.num_of_questions}</td>
                                             <td>{user.num_of_contests}</td>
                                             <td>{user.max_rating}</td>
+                                            <td>{user.curr_rating}</td>
                                         </tr> 
                                         else if(user.max_rating < 2400)
                                         return <tr class='active' id={user.cf_handle}>
@@ -135,6 +141,7 @@ class LeaderBoard extends React.Component {
                                             <td>{user.num_of_questions}</td>
                                             <td>{user.num_of_contests}</td>
                                             <td>{user.max_rating}</td>
+                                            <td>{user.curr_rating}</td>
                                         </tr>    
                                         else 
                                         return <tr class='active' id={user.cf_handle}>
@@ -143,6 +150,7 @@ class LeaderBoard extends React.Component {
                                             <td>{user.num_of_questions}</td>
                                             <td>{user.num_of_contests}</td>
                                             <td>{user.max_rating}</td>
+                                            <td>{user.curr_rating}</td>
                                         </tr>    
                                                
                                     }
@@ -154,6 +162,7 @@ class LeaderBoard extends React.Component {
                                             <td>{user.num_of_questions}</td>
                                             <td>{user.num_of_contests}</td>
                                             <td>{user.max_rating}</td>
+                                            <td>{user.curr_rating}</td>
                                         </tr>
                                         else if(user.max_rating < 1400)
                                         return <tr id={user.cf_handle}>
@@ -162,6 +171,7 @@ class LeaderBoard extends React.Component {
                                             <td>{user.num_of_questions}</td>
                                             <td>{user.num_of_contests}</td>
                                             <td>{user.max_rating}</td>
+                                            <td>{user.curr_rating}</td>
                                         </tr> 
                                         else if(user.max_rating < 1600)
                                         return <tr id={user.cf_handle}>
@@ -170,6 +180,7 @@ class LeaderBoard extends React.Component {
                                             <td>{user.num_of_questions}</td>
                                             <td>{user.num_of_contests}</td>
                                             <td>{user.max_rating}</td>
+                                            <td>{user.curr_rating}</td>
                                         </tr>
                                         else if(user.max_rating < 1900)
                                         return <tr id={user.cf_handle}>
@@ -178,6 +189,7 @@ class LeaderBoard extends React.Component {
                                             <td>{user.num_of_questions}</td>
                                             <td>{user.num_of_contests}</td>
                                             <td>{user.max_rating}</td>
+                                            <td>{user.curr_rating}</td>
                                         </tr>    
                                         else if(user.max_rating < 2200)
                                         return <tr id={user.cf_handle}>
@@ -186,6 +198,7 @@ class LeaderBoard extends React.Component {
                                             <td>{user.num_of_questions}</td>
                                             <td>{user.num_of_contests}</td>
                                             <td>{user.max_rating}</td>
+                                            <td>{user.curr_rating}</td>
                                         </tr>       
                                         else if(user.max_rating < 2400)
                                         return <tr id={user.cf_handle}>
@@ -194,6 +207,7 @@ class LeaderBoard extends React.Component {
                                             <td>{user.num_of_questions}</td>
                                             <td>{user.num_of_contests}</td>
                                             <td>{user.max_rating}</td>
+                                            <td>{user.curr_rating}</td>
                                         </tr>  
                                         else
                                         return <tr id={user.cf_handle}>
@@ -202,6 +216,7 @@ class LeaderBoard extends React.Component {
                                             <td>{user.num_of_questions}</td>
                                             <td>{user.num_of_contests}</td>
                                             <td>{user.max_rating}</td>
+                                            <td>{user.curr_rating}</td>
                                         </tr> 
                                     }
                                         
