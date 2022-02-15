@@ -1,7 +1,7 @@
 {
   "scripts": {
     "start": "node app.js",
-    "build": "cd client && npm install && npm start"
+    "build": "cd client && npm install && npm run build"
   },
   "engines": {
     "npm": "7.20.1",
