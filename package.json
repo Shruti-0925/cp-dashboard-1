@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "build": "cd client && npm run build"
   },
   "dependencies": {
     "axios": "^0.25.0",
