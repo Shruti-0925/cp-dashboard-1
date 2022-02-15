@@ -3,6 +3,10 @@
     "start": "node app.js",
     "build": "cd client && npm run build"
   },
+  "engines": {
+    "npm": "7.20.1",
+    "node": "14.17.3"
+  },
   "dependencies": {
     "axios": "^0.25.0",
     "bcrypt": "^5.0.1",
