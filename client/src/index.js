@@ -1,8 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./components/App";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { createBrowserHistory } from 'history';
+import { HashRouter as Router} from "react-router-dom";
 const historyInstance = createBrowserHistory({ forceRefresh: true });
 
 ReactDOM.render(
