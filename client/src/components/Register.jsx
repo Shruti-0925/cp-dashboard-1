@@ -415,7 +415,7 @@ function Register() {
                     Submit OTP.
                 </button> : null}
                 <br />
-                <span>Already have an account? <Link className="lreg" to="/#login">Login</Link> </span>
+                <span>Already have an account? <Link className="lreg" to="#/login">Login</Link> </span>
             </form>
             <ul class="box-area">
                 <li></li>
