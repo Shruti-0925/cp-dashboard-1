@@ -287,18 +287,18 @@ function Register() {
                 message: "OTP for CP DashBoard is " + otp2,
                 sub: "CP DashBoard: OTP Verification",
             };
-
+          
             fetch("/api/send_email", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json;charset=utf-14",
+                    "Content-Type": "application/json;charset=utf-8",
                 },
                 body: JSON.stringify(details1),
             });
             fetch("/api/send_email", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json;charset=utf-14",
+                    "Content-Type": "application/json;charset=utf-8",
                 },
                 body: JSON.stringify(details2),
             });
