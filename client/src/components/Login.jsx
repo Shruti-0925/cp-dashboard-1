@@ -92,7 +92,7 @@ function Login() {
         setIsmail(false);
         setIsotp(true);
         otp = (Math.floor(900000 * Math.random()) + 100000).toString();
-        console.log(otp);
+       // console.log(otp);
         console.log(inst_email);
         let details = {
             email: inst_email,

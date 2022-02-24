@@ -270,8 +270,8 @@ function Register() {
             setShow(true);
             otp1 = (Math.floor(900000 * Math.random()) + 100000).toString();
             otp2 = (Math.floor(900000 * Math.random()) + 100000).toString();
-            console.log(otp1);
-            console.log(otp2);
+            //console.log(otp1);
+            //console.log(otp2);
             console.log(typeof otp1);
             console.log(typeof cfotp);
             //     console.log("email try1")
