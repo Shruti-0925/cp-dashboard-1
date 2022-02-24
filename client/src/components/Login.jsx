@@ -352,7 +352,7 @@ function Login() {
                 </button> : null}
                 <br /> 
                 {islogin ? <span>
-                    Don't have account? <Link className="lreg" to="/register">Register</Link>
+                    Don't have account? <Link className="lreg" to="/#register">Register</Link>
                 </span> : null}
             </form>
             <ul class="box-area">

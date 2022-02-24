@@ -52,7 +52,7 @@ class LeaderBoard extends React.Component {
                 <div className="all">
                     <nav>
                         <a href="">LeaderBoard</a>
-                        <a href="/PrevStandings">Contests Standings</a>
+                        <a href="/#PrevStandings">Contests Standings</a>
                         <a className="logout-button" 
                             onClick={logout}
                         >Logout</a>
