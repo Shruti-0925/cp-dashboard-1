@@ -30,7 +30,7 @@ class LeaderBoard extends React.Component {
         function logout()
         {
             sessionStorage.clear();
-            history.pushState('','','/login')
+            history.pushState('','','')
             window.location.reload();
         }
         if (!DataisLoaded)
