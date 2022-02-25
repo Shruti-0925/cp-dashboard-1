@@ -97,7 +97,7 @@ class PrevStandings extends React.Component {
                             <option value="None">Select Contest</option>
                             {contests_data.map((contest) => <option value={contest.contest_id} key={contest.contest_id}>{contest.contest_name}</option>)}
                         </select>
-                        <p className="p-styling"><a className="a-button" href={`prevstandings?contest_id=${selectedOption}`}>Get Ratings</a></p>
+                        <p className="p-styling"><a className="a-button" href={`PrevStandings?contest_id=${selectedOption}`}>Get Ratings</a></p>
                         <Helmet><link type="text/css" rel="stylesheet" href="leaderboard.css" /></Helmet>
                     </div>
                 </div>
@@ -108,7 +108,7 @@ class PrevStandings extends React.Component {
                 <div>
                     <nav>
                         <a href="../">LeaderBoard</a>
-                        <a href="##/PrevStandings">Contests Standings</a>
+                        <a href="#/PrevStandings">Contests Standings</a>
                         <a className="logout-button" onClick={logout}>Logout</a>
                         <div class="animation start-about"></div>
                     </nav>
@@ -122,7 +122,7 @@ class PrevStandings extends React.Component {
                 <div className="all">
                     <nav>
                         <a href="../">LeaderBoard</a>
-                        <a href="##/PrevStandings">Contests Standings</a>
+                        <a href="#/PrevStandings">Contests Standings</a>
                         <a className="logout-button" onClick={logout}>Logout</a>
 
                         <div class="animation start-about"></div>
